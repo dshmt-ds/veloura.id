@@ -54,32 +54,33 @@ class BookingController extends Controller
 
         $bookings = $query->paginate(10)->withQueryString();
 
-        return view('bookings.index', compact('bookings'));
+        return view('admin.bookings.index', compact('bookings'));
     }
 
     /*
     |--------------------------------------------------------------------------
-    | CREATE
+    | CREATE (Khusus Admin)
     |--------------------------------------------------------------------------
     */
     public function create()
     {
-        $customers = User::orderBy('name')->get();
+        $customers = User::role('customer')->orderBy('name')->get();
         $staff = Staff::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('status', 'active')->orderBy('name')->get();
 
-        return view('bookings.create', compact('customers', 'staff', 'services'));
+        return view('admin.bookings.create', compact('customers', 'staff', 'services'));
     }
 
     /*
     |--------------------------------------------------------------------------
-    | STORE
+    | STORE (Bisa digunakan Customer maupun Admin)
     |--------------------------------------------------------------------------
     */
     public function store(Request $request)
     {
-        // 1. Ambil customer ID berdasarkan Siapa yang Login vs Input Form Admin
         $user = auth()->user();
+
+        // 1. Ambil customer_id: Jika customer login, paksa pakai ID-nya sendiri. Jika admin, ambil dari input form.
         $customerId = $user->hasRole('customer') ? $user->id : $request->input('customer_id');
 
         // 2. Format input start_at jika dikirim terpisah (booking_date & booking_time)
@@ -96,63 +97,58 @@ class BookingController extends Controller
             ]);
         }
 
-        // Merge customer_id yang sudah aman ke dalam request sebelum validasi
         $request->merge(['customer_id' => $customerId]);
 
-        // 4. Validasi
+        // 4. Validasi Input
         $validated = $request->validate([
-            'customer_id' => ['required', 'exists:users,id'],
-            'staff_id'    => ['required', 'exists:staffs,id'],
-            'start_at'    => ['required', 'date'],
-            'phone'       => ['nullable', 'string', 'max:20'],
+            'customer_id'    => ['required', 'exists:users,id'],
+            'staff_id'       => ['required', 'exists:staffs,id'],
+            'start_at'       => ['required', 'date'],
+            'phone'          => ['nullable', 'string', 'max:20'],
             'payment_due_at' => ['nullable', 'date'],
             'customer_notes' => ['nullable', 'string'],
-            'services'    => ['required', 'array', 'min:1'],
-            'services.*'  => ['required', 'exists:services,id', 'distinct'],
+            'services'       => ['required', 'array', 'min:1'],
+            'services.*'     => ['required', 'exists:services,id', 'distinct'],
         ]);
 
         DB::transaction(function () use ($validated) {
-            // Update No HP Customer jika diisi
             if (!empty($validated['phone'])) {
                 User::where('id', $validated['customer_id'])->update([
                     'phone' => $validated['phone'],
                 ]);
             }
 
-            // Hitung kalkulasi berdasarkan Service
             $services = Service::whereIn('id', $validated['services'])->get();
             $totalAmount = $services->sum('price');
-            $totalDuration = $services->sum('duration'); // Menggunakan kolom 'duration' di model Service
+            $totalDuration = $services->sum('duration');
 
             $startAt = Carbon::parse($validated['start_at']);
             $endAt = $startAt->copy()->addMinutes($totalDuration);
 
-            // Buat Booking Utama
             $booking = Booking::create([
-                'booking_code'    => $this->generateBookingCode(),
-                'customer_id'     => $validated['customer_id'],
-                'staff_id'        => $validated['staff_id'],
-                'start_at'        => $startAt,
-                'end_at'          => $endAt,
-                'total_amount'    => $totalAmount,
-                'status'          => 'pending_payment',
-                'payment_due_at'  => $validated['payment_due_at'] ?? null,
-                'customer_notes'  => $validated['customer_notes'] ?? null,
+                'booking_code'   => $this->generateBookingCode(),
+                'customer_id'    => $validated['customer_id'],
+                'staff_id'       => $validated['staff_id'],
+                'start_at'       => $startAt,
+                'end_at'         => $endAt,
+                'total_amount'   => $totalAmount,
+                'status'         => 'pending_payment',
+                'payment_due_at' => $validated['payment_due_at'] ?? null,
+                'customer_notes' => $validated['customer_notes'] ?? null,
             ]);
 
-            // Buat Item Booking (Koreksi nama kolom 'duration_minutes' pada BookingItem)
             foreach ($services as $service) {
                 BookingItem::create([
                     'booking_id'       => $booking->id,
                     'service_id'       => $service->id,
                     'service_name'     => $service->name,
                     'price'            => $service->price,
-                    'duration_minutes' => $service->duration, 
+                    'duration_minutes' => $service->duration,
                 ]);
             }
         });
 
-        $redirectRoute = auth()->user()->hasRole('customer') ? 'customer.bookings.index' : 'admin.bookings.index';
+        $redirectRoute = $user->hasRole('customer') ? 'customer.bookings.index' : 'admin.bookings.index';
 
         return redirect()->route($redirectRoute)->with('success', 'Booking berhasil dibuat.');
     }
@@ -176,29 +172,30 @@ class BookingController extends Controller
             return view('customer.bookings.show', compact('booking'));
         }
 
+        // Tampilan Admin
         $booking->load(['customer', 'staff', 'items.service']);
-        return view('bookings.show', compact('booking'));
+        return view('admin.bookings.show', compact('booking'));
     }
 
     /*
     |--------------------------------------------------------------------------
-    | EDIT
+    | EDIT (Khusus Admin)
     |--------------------------------------------------------------------------
     */
     public function edit(Booking $booking)
     {
         $booking->load('items');
 
-        $customers = User::orderBy('name')->get();
+        $customers = User::role('customer')->orderBy('name')->get();
         $staff = Staff::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('status', 'active')->orderBy('name')->get();
 
-        return view('bookings.edit', compact('booking', 'customers', 'staff', 'services'));
+        return view('admin.bookings.edit', compact('booking', 'customers', 'staff', 'services'));
     }
 
     /*
     |--------------------------------------------------------------------------
-    | UPDATE
+    | UPDATE (Khusus Admin)
     |--------------------------------------------------------------------------
     */
     public function update(Request $request, Booking $booking)
@@ -231,7 +228,7 @@ class BookingController extends Controller
             $services = Service::whereIn('id', $validated['services'])->get();
 
             $totalAmount = $services->sum('price');
-            $totalDuration = $services->sum('duration'); // Koreksi: Menggunakan 'duration' dari Service
+            $totalDuration = $services->sum('duration');
 
             $startAt = Carbon::parse($validated['start_at']);
             $endAt = $startAt->copy()->addMinutes($totalDuration);
@@ -259,7 +256,7 @@ class BookingController extends Controller
                     'service_id'       => $service->id,
                     'service_name'     => $service->name,
                     'price'            => $service->price,
-                    'duration_minutes' => $service->duration, // Koreksi nama atribut
+                    'duration_minutes' => $service->duration,
                 ]);
             }
         });
@@ -269,14 +266,23 @@ class BookingController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | DELETE
+    | DELETE (Hapus/Batal Booking)
     |--------------------------------------------------------------------------
     */
     public function destroy(Booking $booking)
     {
+        $user = auth()->user();
+
+        // Keamanan: Validasi bahwa customer hanya bisa menghapus booking miliknya
+        if ($user->hasRole('customer') && $booking->customer_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $booking->delete();
 
-        return redirect()->route('admin.bookings.index')->with('success', 'Booking berhasil dihapus.');
+        $redirectRoute = $user->hasRole('customer') ? 'customer.bookings.index' : 'admin.bookings.index';
+
+        return redirect()->route($redirectRoute)->with('success', 'Booking berhasil dihapus.');
     }
 
     /*

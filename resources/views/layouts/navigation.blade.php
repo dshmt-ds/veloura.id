@@ -49,12 +49,9 @@
                                 <a href="{{ route('admin.bookings.index') }}" class="px-3 py-1.5 rounded-full transition {{ request()->routeIs('admin.bookings.*') ? 'bg-[#6B3E4B] text-white' : 'text-gray-600 hover:text-[#6B3E4B]' }}">Booking</a>
                             @endif
 
-                            @if (Route::has('admin.staff-schedules.index'))
-                                <a href="{{ route('admin.staff-schedules.index') }}" class="px-3 py-1.5 rounded-full transition {{ request()->routeIs('admin.staff-schedules.*') ? 'bg-[#6B3E4B] text-white' : 'text-gray-600 hover:text-[#6B3E4B]' }}">Jadwal Staff</a>
-                            @endif
 
-                            @if (Route::has('admin.operating-hours.index'))
-                                <a href="{{ route('admin.operating-hours.index') }}" class="px-3 py-1.5 rounded-full transition {{ request()->routeIs('admin.operating-hours.*') ? 'bg-[#6B3E4B] text-white' : 'text-gray-600 hover:text-[#6B3E4B]' }}">Jam Operasional</a>
+                            @if (Route::has('admin.reports.index'))
+                                <a href="{{ route('admin.reports.index') }}" class="px-3 py-1.5 rounded-full transition {{ request()->routeIs('admin.reports.*') ? 'bg-[#6B3E4B] text-white' : 'text-gray-600 hover:text-[#6B3E4B]' }}">Laporan</a>
                             @endif
                         @endif
                     @endauth

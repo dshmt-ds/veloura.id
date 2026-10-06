@@ -6,6 +6,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceCategoryController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffController;
@@ -50,7 +51,6 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('customer.bookings.index');
     
-    // Rute detail booking (Mendukung nama customer.bookings.show & bookings.show)
     Route::get('/my-bookings/{booking}', [BookingController::class, 'show'])
         ->name('customer.bookings.show');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])
@@ -86,6 +86,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('operating-hours', OperatingHourController::class)->except(['show']);
         Route::resource('staff-schedules', StaffScheduleController::class);
         Route::resource('bookings', BookingController::class)->except(['store']);
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     });
 
 require __DIR__ . '/auth.php';
