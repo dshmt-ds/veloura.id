@@ -125,7 +125,7 @@ class ServiceController extends Controller
         Service::create($validated);
 
         return redirect()
-            ->route('services.index')
+            ->route('admin.services.index')
             ->with('success', 'Layanan berhasil ditambahkan.');
     }
 

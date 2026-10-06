@@ -17,7 +17,7 @@
         </div>
     </x-slot>
 
-    <div class=" bg-[#F7EFE9] min-h-[calc(100vh-160px)]">
+    <div class="bg-[#F7EFE9] min-h-[calc(100vh-160px)] py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div class="bg-white rounded-3xl shadow-sm border border-[#EFE3DE] overflow-hidden">
@@ -25,7 +25,7 @@
                     <h3 class="font-semibold text-base text-[#6B3E4B] flex items-center gap-2">
                         <i class="fa-solid fa-calendar-check text-[#D8B08C]"></i> Daftar Reservasi
                     </h3>
-                    <span class="text-xs text-gray-400">Total: {{ $bookings->total() ?? count($bookings) }} Booking</span>
+                    <span class="text-xs text-gray-400">Total: {{ method_exists($bookings, 'total') ? $bookings->total() : count($bookings) }} Booking</span>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -53,7 +53,7 @@
                                         <div class="flex items-center gap-2">
                                             <i class="fa-regular fa-clock text-[#D8B08C] text-xs"></i>
                                             <span class="font-medium text-gray-900">
-                                                {{ $booking->start_at ? $booking->start_at->format('d M Y, H:i') : '-' }} WIB
+                                                {{ $booking->start_at ? \Carbon\Carbon::parse($booking->start_at)->format('d M Y, H:i') : '-' }} WIB
                                             </span>
                                         </div>
                                     </td>
@@ -79,9 +79,9 @@
                                         @php
                                             $status = strtolower($booking->status);
                                             $badgeClasses = match($status) {
-                                                'confirmed', 'approved', 'completed', 'selesai' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                                                'pending', 'menunggu' => 'bg-amber-50 text-amber-700 border-amber-200',
-                                                'cancelled', 'batal' => 'bg-rose-50 text-rose-700 border-rose-200',
+                                                'confirmed', 'approved', 'completed', 'selesai', 'paid' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                                'pending', 'pending_payment', 'menunggu' => 'bg-amber-50 text-amber-700 border-amber-200',
+                                                'cancelled', 'batal', 'expired', 'failed' => 'bg-rose-50 text-rose-700 border-rose-200',
                                                 default => 'bg-gray-50 text-gray-700 border-gray-200',
                                             };
                                         @endphp
@@ -92,13 +92,15 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        @if(Route::has('bookings.show'))
-                                            <a href="{{ route('bookings.show', $booking->id) }}" class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#6B3E4B] text-[#6B3E4B] hover:bg-[#6B3E4B] hover:text-white transition text-xs font-medium shadow-sm">
-                                                <i class="fa-solid fa-eye text-[10px]"></i> Detail
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400 text-xs">-</span>
-                                        @endif
+                                        @php
+                                            $detailRoute = Route::has('customer.bookings.show') 
+                                                ? route('customer.bookings.show', $booking) 
+                                                : (Route::has('bookings.show') ? route('bookings.show', $booking->id) : '#');
+                                        @endphp
+
+                                        <a href="{{ $detailRoute }}" class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#6B3E4B] text-[#6B3E4B] hover:bg-[#6B3E4B] hover:text-white transition text-xs font-medium shadow-sm">
+                                            <i class="fa-solid fa-eye text-[10px]"></i> Detail
+                                        </a>
                                     </td>
                                 </tr>
                             @empty
@@ -121,7 +123,7 @@
                     </table>
                 </div>
 
-                @if($bookings->hasPages())
+                @if(method_exists($bookings, 'hasPages') && $bookings->hasPages())
                     <div class="p-4 border-t border-[#EFE3DE] bg-[#F7EFE9]/20">
                         {{ $bookings->links() }}
                     </div>
@@ -132,12 +134,10 @@
     </div>
 
     @push('scripts')
-        <!-- SweetAlert2 CDN -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Notifikasi Flash Session Sukses
                 @if (session('success'))
                     Swal.fire({
                         icon: 'success',
@@ -151,7 +151,6 @@
                     });
                 @endif
 
-                // Notifikasi Flash Session Error
                 @if (session('error'))
                     Swal.fire({
                         icon: 'error',

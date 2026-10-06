@@ -20,6 +20,7 @@ class Payment extends Model
         'amount',
         'currency',
         'status',
+        'snap_token',
         'checkout_url',
         'expires_at',
         'paid_at',
@@ -31,17 +32,11 @@ class Payment extends Model
         'paid_at' => 'datetime',
     ];
 
-    /**
-     * Relasi ke model Booking
-     */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);
     }
 
-    /**
-     * Relasi ke model PaymentEvent (Webhook Logs)
-     */
     public function events(): HasMany
     {
         return $this->hasMany(PaymentEvent::class);

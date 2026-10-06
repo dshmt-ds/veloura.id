@@ -20,7 +20,7 @@
                         <i class="fa-solid fa-layer-group text-xs  text-[#6B3E4B]"></i>
                         <span>Kategori Layanan</span>
                     </a>
-                    <a href="{{ route('admin.service-categories.create') }}" class="inline-flex items-center gap-2 bg-[#6B3E4B] hover:bg-[#542d39] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-xs transition">
+                    <a href="{{ route('admin.services.create') }}" class="inline-flex items-center gap-2 bg-[#6B3E4B] hover:bg-[#542d39] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-xs transition">
                         <i class="fa-solid fa-plus text-xs"></i>
                         <span>Tambah Layanan</span>
                     </a>

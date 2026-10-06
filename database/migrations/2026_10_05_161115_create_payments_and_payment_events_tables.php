@@ -26,12 +26,9 @@ return new class extends Migration
             $table->dateTime('expires_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->timestamps();
-
-            // Unique constraint kombinasi gateway_provider & gateway_transaction_id
             $table->unique(['gateway_provider', 'gateway_transaction_id']);
         });
 
-        // 11. Table: payment_events
         Schema::create('payment_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payment_id')->nullable()->constrained('payments')->nullOnDelete();

@@ -10,7 +10,6 @@ class PaymentEvent extends Model
 {
     use HasFactory;
 
-    // Tabel ini hanya mencatat created_at
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,9 +29,6 @@ class PaymentEvent extends Model
         'created_at' => 'datetime',
     ];
 
-    /**
-     * Relasi ke model Payment
-     */
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);

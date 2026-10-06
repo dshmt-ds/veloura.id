@@ -67,7 +67,7 @@ class ServiceCategoryController extends Controller
         ServiceCategory::create($validated);
 
         return redirect()
-            ->route('service-categories.index')
+            ->route('admin.service-categories.index')
             ->with('success', 'Kategori layanan berhasil ditambahkan.');
     }
 

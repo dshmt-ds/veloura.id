@@ -19,7 +19,7 @@
         </div>
     </x-slot>
 
-    <div class=" bg-[#F7EFE9] min-h-[calc(100vh-160px)]">
+    <div class="bg-[#F7EFE9] min-h-[calc(100vh-160px)] py-6">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <div class="bg-white rounded-3xl shadow-sm border border-[#EFE3DE] p-6 md:p-8">
@@ -30,9 +30,9 @@
                             @php
                                 $status = strtolower($booking->status);
                                 $badgeClasses = match($status) {
-                                    'confirmed', 'approved', 'completed', 'selesai' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                                    'pending', 'menunggu' => 'bg-amber-50 text-amber-700 border-amber-200',
-                                    'cancelled', 'batal' => 'bg-rose-50 text-rose-700 border-rose-200',
+                                    'confirmed', 'approved', 'completed', 'selesai', 'paid' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                    'pending', 'pending_payment', 'menunggu' => 'bg-amber-50 text-amber-700 border-amber-200',
+                                    'cancelled', 'batal', 'expired', 'failed' => 'bg-rose-50 text-rose-700 border-rose-200',
                                     default => 'bg-gray-50 text-gray-700 border-gray-200',
                                 };
                             @endphp
@@ -47,7 +47,7 @@
                         <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Tanggal Operasional</p>
                         <p class="text-sm font-semibold text-[#6B3E4B] mt-1">
                             <i class="fa-regular fa-calendar-check text-[#D8B08C] mr-1"></i>
-                            {{ $booking->start_at ? $booking->start_at->format('d M Y, H:i') : '-' }} WIB
+                            {{ $booking->start_at ? \Carbon\Carbon::parse($booking->start_at)->format('d M Y, H:i') : '-' }} WIB
                         </p>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 border-b border-[#EFE3DE]">
                     <div class="p-4 rounded-2xl bg-[#F7EFE9]/50 border border-[#EFE3DE]">
                         <p class="text-xs text-[#8b686e] font-medium uppercase tracking-wider mb-2">Informasi Pemesan</p>
-                        <p class="font-bold text-gray-800 text-sm">{{ $booking->user->name ?? Auth::user()->name }}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">{{ $booking->user->email ?? Auth::user()->email }}</p>
+                        <p class="font-bold text-gray-800 text-sm">{{ $booking->customer->name ?? $booking->user->name ?? Auth::user()->name }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ $booking->customer->email ?? $booking->user->email ?? Auth::user()->email }}</p>
                     </div>
 
                     <div class="p-4 rounded-2xl bg-[#F7EFE9]/50 border border-[#EFE3DE]">
@@ -123,15 +123,32 @@
             </div>
 
             <div class="flex justify-between items-center pt-2">
-                @if(in_array(strtolower($booking->status), ['pending', 'menunggu']))
-                    <button type="button" onclick="confirmCancel()" class="px-5 py-2.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 transition text-xs font-semibold">
+                @if(in_array(strtolower($booking->status), ['pending', 'pending_payment', 'menunggu']))
+                    <button type="button" onclick="confirmCancel()" class="px-5 py-2.5 rounded-full bg-[#EFE3DE] border border-[#EFE3DE] text-[#6B3E4B] hover:bg-[#EFE3DE] transition text-xs font-semibold">
                         Batalkan Booking
                     </button>
                     
-                    <form id="cancel-form" action="{{ route('bookings.show', $booking->id) }}" method="POST" class="hidden">
+                    <form id="cancel-form" action="{{ route('customer.bookings.destroy', $booking) }}" method="POST" class="hidden">
                         @csrf
                         @method('DELETE')
                     </form>
+                @else
+                    <div></div>
+                @endif
+
+                @if (strtolower($booking->status) !== 'confirmed' && strtolower($booking->latestPayment?->status ?? 'pending') !== 'paid')
+                    @php
+                        $paymentRoute = Route::has('customer.bookings.payment') 
+                            ? route('customer.bookings.payment', $booking) 
+                            : (Route::has('customer.payment') ? route('customer.payment', $booking) : '#');
+                    @endphp
+
+                    <a
+                        href="{{ $paymentRoute }}"
+                        class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#6B3E4B] hover:bg-[#522e39] text-white font-semibold text-xs transition shadow-sm"
+                    >
+                        <i class="fa-solid fa-credit-card mr-2"></i> Bayar Sekarang
+                    </a>
                 @endif
             </div>
 
