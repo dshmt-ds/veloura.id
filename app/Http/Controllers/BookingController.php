@@ -24,7 +24,7 @@ class BookingController extends Controller
         $user = auth()->user();
 
         // Customer hanya dapat melihat booking miliknya sendiri
-        if ($user->hasRole('customer')) {
+        if ($user->hasRole('customer') || $user->isCustomer()) {
             $bookings = Booking::with(['customer', 'staff', 'items'])
                 ->where('customer_id', $user->id)
                 ->latest()
@@ -64,7 +64,13 @@ class BookingController extends Controller
     */
     public function create()
     {
-        $customers = User::role('customer')->orderBy('name')->get();
+        // Mengambil user dengan role customer berdasarkan kolom 'role'
+        $customers = User::where('role', 'customer')->orderBy('name')->get();
+
+        if ($customers->isEmpty()) {
+            $customers = User::orderBy('name')->get(); // Fallback jika belum ada yang diset role-nya
+        }
+
         $staff = Staff::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('status', 'active')->orderBy('name')->get();
 
@@ -81,7 +87,7 @@ class BookingController extends Controller
         $user = auth()->user();
 
         // 1. Ambil customer_id: Jika customer login, paksa pakai ID-nya sendiri. Jika admin, ambil dari input form.
-        $customerId = $user->hasRole('customer') ? $user->id : $request->input('customer_id');
+        $customerId = ($user->hasRole('customer') || $user->isCustomer()) ? $user->id : $request->input('customer_id');
 
         // 2. Format input start_at jika dikirim terpisah (booking_date & booking_time)
         if (!$request->has('start_at') && $request->filled('booking_date') && $request->filled('booking_time')) {
@@ -148,7 +154,7 @@ class BookingController extends Controller
             }
         });
 
-        $redirectRoute = $user->hasRole('customer') ? 'customer.bookings.index' : 'admin.bookings.index';
+        $redirectRoute = ($user->hasRole('customer') || $user->isCustomer()) ? 'customer.bookings.index' : 'admin.bookings.index';
 
         return redirect()->route($redirectRoute)->with('success', 'Booking berhasil dibuat.');
     }
@@ -163,7 +169,7 @@ class BookingController extends Controller
         $user = auth()->user();
 
         // Customer hanya boleh melihat booking miliknya
-        if ($user->hasRole('customer')) {
+        if ($user->hasRole('customer') || $user->isCustomer()) {
             if ($booking->customer_id !== $user->id) {
                 abort(403, 'Akses ditolak.');
             }
@@ -186,7 +192,11 @@ class BookingController extends Controller
     {
         $booking->load('items');
 
-        $customers = User::role('customer')->orderBy('name')->get();
+        $customers = User::where('role', 'customer')->orderBy('name')->get();
+        if ($customers->isEmpty()) {
+            $customers = User::orderBy('name')->get();
+        }
+
         $staff = Staff::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('status', 'active')->orderBy('name')->get();
 
@@ -274,13 +284,13 @@ class BookingController extends Controller
         $user = auth()->user();
 
         // Keamanan: Validasi bahwa customer hanya bisa menghapus booking miliknya
-        if ($user->hasRole('customer') && $booking->customer_id !== $user->id) {
+        if (($user->hasRole('customer') || $user->isCustomer()) && $booking->customer_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
         $booking->delete();
 
-        $redirectRoute = $user->hasRole('customer') ? 'customer.bookings.index' : 'admin.bookings.index';
+        $redirectRoute = ($user->hasRole('customer') || $user->isCustomer()) ? 'customer.bookings.index' : 'admin.bookings.index';
 
         return redirect()->route($redirectRoute)->with('success', 'Booking berhasil dihapus.');
     }
