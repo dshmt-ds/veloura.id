@@ -1,27 +1,27 @@
 <x-app-layout>
-    @slot('title', 'Welcome to Veloura Beauty Studio')
+    @slot('title', 'Selamat Datang di Indah Salon')
 
     <!-- HERO SECTION -->
-    <section id="home" class="pt-[76px] min-h-[650px] overflow-hidden">
+    <section id="home" class="-mt-6 pt-0 min-h-[650px] overflow-hidden">
         <div class="max-w-7xl mx-auto px-5">
             <div class="grid lg:grid-cols-2 min-h-[620px] items-center gap-10">
                 <div class="py-12 lg:py-20">
                     <p class="font-serif italic text-2xl text-[#A9787F] mb-3">
-                        Welcome to Veloura <span class="text-[#D8B08C]">♡</span>
+                        Selamat Datang di Indah Salon <span class="text-[#D8B08C]">♡</span>
                     </p>
                     <h2 class="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] text-[#6B3E4B]">
                         Feel Beautiful,
                         <span class="block text-[#A3485A]">Feel You.</span>
                     </h2>
                     <p class="mt-6 max-w-xl text-[#765e63] leading-7 text-sm md:text-base">
-                        Discover a beauty experience made just for you. From hair styling and coloring to nails and relaxing treatments, Veloura is your sanctuary to look stunning and feel confident.
+                        Nikmati perawatan kecantikan sesuai kebutuhan Anda. Mulai dari penataan rambut, pewarnaan, perawatan kuku, hingga relaksasi, Indah Salon membantu Anda tampil menawan dan percaya diri.
                     </p>
                     <div class="flex flex-wrap gap-4 mt-8">
                         <a href="#booking" class="bg-[#6B3E4B] text-white px-7 py-3.5 rounded-full text-sm font-medium hover:bg-[#542d39] transition shadow-lg shadow-[#6B3E4B]/20">
-                            Book Now
+                            Pesan Sekarang
                         </a>
                         <a href="#services" class="border border-[#6B3E4B] text-[#6B3E4B] px-7 py-3.5 rounded-full text-sm font-medium hover:bg-[#6B3E4B] hover:text-white transition">
-                            Our Services
+                            Layanan Kami
                         </a>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                     <div class="absolute top-10 right-0 w-[320px] md:w-[400px] h-[420px] md:h-[500px] rounded-[45%_45%_10%_10%] bg-[#EFD4DA]"></div>
                     <img
                         src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=900&q=85"
-                        alt="Veloura Beauty Treatment"
+                        alt="Perawatan Kecantikan Indah Salon"
                         class="relative z-10 w-full max-w-[420px] md:max-w-[470px] h-[460px] md:h-[520px] object-cover rounded-[200px_200px_30px_30px] md:rounded-[230px_230px_30px_30px] shadow-2xl"
                     >
                     <div class="absolute bottom-5 -right-3 w-24 h-24 rounded-full bg-[#D8B08C]/80 blur-sm pointer-events-none"></div>
@@ -44,8 +44,8 @@
         <div class="max-w-7xl mx-auto px-5">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                 <div>
-                    <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">What We Offer</p>
-                    <h2 class="font-serif text-4xl md:text-5xl font-semibold mt-2">Our Services & Prices</h2>
+                    <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Layanan Kami</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-semibold mt-2">Layanan dan Harga Kami</h2>
                     <div class="w-16 h-[2px] bg-[#D8B08C] mt-4"></div>
                 </div>
 
@@ -114,7 +114,7 @@
     </section>
 
     <!-- FEATURED TREATMENTS & ALL SERVICES SECTION -->
-    <section id="prices" class="py-20 bg-[#F7EFE9]" x-data="{ 
+    <section id="prices" class="py-20 bg-white" x-data="{ 
         activeCategory: 'all', 
         searchQuery: '',
         limit: 4,
@@ -144,9 +144,9 @@
         resetLimit() { this.limit = 4; }
     }">
         <div class="max-w-7xl mx-auto px-5">
-            <div class="text-center max-w-2xl mx-auto mb-10">
-                <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Signature Offerings</p>
-                <h2 class="font-serif text-4xl md:text-5xl font-semibold mt-2 text-[#6B3E4B]">Our Treatments & Services</h2>
+            <div class="text-center max-w-5xl mx-auto mb-10">
+                <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Perawatan Unggulan</p>
+                <h2 class="font-serif text-[clamp(1rem,4.5vw,3rem)] whitespace-nowrap font-semibold mt-2 text-[#6B3E4B]">Pilihan Layanan Perawatan</h2>
                 <p class="text-sm text-[#765e63] mt-3">Jelajahi seluruh layanan perawatan kecantikan terbaik kami.</p>
             </div>
 
@@ -207,13 +207,13 @@
                         <div>
                             <div class="relative h-48 overflow-hidden bg-[#F7EFE9]">
                                 <img 
-                                    src="{{ $service->image ? asset('storage/' . $service->image) : 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=800&q=80' }}" 
+                                    src="{{ $service->image_url }}" 
                                     alt="{{ $service->name }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=800&q=80';"
+                                    onerror="this.onerror=null; this.src='{{ asset('images/service-default.svg') }}';"
                                 >
                                 <span class="absolute top-4 left-4 bg-[#6B3E4B]/90 backdrop-blur-md text-white text-[10px] uppercase font-semibold px-3 py-1 rounded-full tracking-wider">
-                                    {{ $service->category->name ?? 'General' }}
+                                    {{ $service->category->name ?? 'Umum' }}
                                 </span>
                                 @if($service->duration)
                                     <span class="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-[#6B3E4B] text-[10px] font-medium px-2.5 py-1 rounded-full shadow-sm">
@@ -240,7 +240,7 @@
                                 </p>
                             </div>
                             <a href="#booking" class="inline-flex items-center gap-1 bg-[#6B3E4B] text-white text-xs font-medium px-4 py-2.5 rounded-full hover:bg-[#542d39] transition shadow-sm">
-                                Book Now ➔
+                                Pesan Sekarang ➔
                             </a>
                         </div>
                     </div>
@@ -254,7 +254,7 @@
             <!-- LOAD MORE BUTTON -->
             <div x-show="limit < filteredCount" class="text-center mt-12">
                 <button @click="limit += 4" class="inline-flex items-center gap-2 bg-[#6B3E4B] text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-[#542d39] transition duration-300 shadow-md">
-                    <span>More Services</span>
+                    <span>Layanan Lainnya</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
@@ -267,29 +267,29 @@
     <section id="about" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-5">
             <div class="text-center mb-12">
-                <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Why Choose Us</p>
-                <h2 class="font-serif text-4xl font-semibold mt-2">The Veloura Experience</h2>
+                <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Mengapa Memilih Kami</p>
+                <h2 class="font-serif text-4xl font-semibold mt-2">Pengalaman Perawatan di Indah Salon</h2>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="text-center p-6 rounded-2xl bg-[#F7EFE9]">
                     <div class="text-3xl mb-4 text-[#6B3E4B]">✦</div>
-                    <h3 class="font-semibold text-lg">Professional</h3>
-                    <p class="text-xs text-gray-500 mt-2">Highly skilled and certified beauty specialists.</p>
+                    <h3 class="font-semibold text-lg">Profesional</h3>
+                    <p class="text-xs text-gray-500 mt-2">Tenaga kecantikan terampil dan bersertifikat.</p>
                 </div>
                 <div class="text-center p-6 rounded-2xl bg-[#F7EFE9]">
                     <div class="text-3xl mb-4 text-[#6B3E4B]">♡</div>
-                    <h3 class="font-semibold text-lg">Premium Products</h3>
-                    <p class="text-xs text-gray-500 mt-2">Top-tier, dermatologically tested beauty products.</p>
+                    <h3 class="font-semibold text-lg">Produk Berkualitas</h3>
+                    <p class="text-xs text-gray-500 mt-2">Produk kecantikan berkualitas yang telah diuji secara dermatologis.</p>
                 </div>
                 <div class="text-center p-6 rounded-2xl bg-[#F7EFE9]">
                     <div class="text-3xl mb-4 text-[#6B3E4B]">✿</div>
-                    <h3 class="font-semibold text-lg">Clean & Safe</h3>
-                    <p class="text-xs text-gray-500 mt-2">Relaxing, clean, and fully sanitized environment.</p>
+                    <h3 class="font-semibold text-lg">Bersih dan Aman</h3>
+                    <p class="text-xs text-gray-500 mt-2">Lingkungan bersih, higienis, dan nyaman.</p>
                 </div>
                 <div class="text-center p-6 rounded-2xl bg-[#F7EFE9]">
                     <div class="text-3xl mb-4 text-[#6B3E4B]">☆</div>
-                    <h3 class="font-semibold text-lg">Client Satisfaction</h3>
-                    <p class="text-xs text-gray-500 mt-2">Dedicated to making you feel comfortable and confident.</p>
+                    <h3 class="font-semibold text-lg">Kepuasan Pelanggan</h3>
+                    <p class="text-xs text-gray-500 mt-2">Kami mengutamakan kenyamanan dan kepercayaan diri Anda.</p>
                 </div>
             </div>
         </div>
@@ -300,17 +300,17 @@
         <div class="max-w-5xl mx-auto px-5">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="text-white">
-                    <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Ready for your glow?</p>
+                    <p class="uppercase tracking-[0.3em] text-xs text-[#D8B08C] font-semibold">Siap tampil menawan?</p>
                     <h2 class="font-serif text-4xl md:text-5xl font-semibold mt-3">
-                        Book Your <span class="text-[#D8B08C]">Appointment</span>
+                        Buat Janji <span class="text-[#D8B08C]">Perawatan</span>
                     </h2>
                     <p class="mt-5 text-white/70 leading-7 text-sm md:text-base">
-                        Select your preferred service and date. Our team will handle the rest to make sure your session is effortless and rejuvenating.
+                        Pilih layanan dan tanggal yang Anda inginkan. Tim kami siap memberikan perawatan yang nyaman dan menyegarkan.
                     </p>
                 </div>
 
                 <div class="bg-white rounded-3xl p-7 shadow-2xl">
-                    <h3 class="font-serif text-2xl font-semibold mb-6 text-[#6B3E4B]">Make an Appointment</h3>
+                    <h3 class="font-serif text-2xl font-semibold mb-6 text-[#6B3E4B]">Buat Janji Perawatan</h3>
 
                     @auth
                         <form action="{{ route('bookings.store') }}" method="POST" class="space-y-4">
@@ -340,9 +340,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-gray-600 mb-1">Pilih Staff / Terapis</label>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Pilih Staf</label>
                                 <select name="staff_id" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white cursor-pointer">
-                                    <option value="" disabled selected>Pilih Staff</option>
+                                    <option value="" disabled selected>Pilih Staf</option>
                                     @foreach ($staffs as $person)
                                         <option value="{{ $person->id }}">{{ $person->name }}</option>
                                     @endforeach
@@ -365,7 +365,7 @@
                             </div>
 
                             <button type="submit" class="w-full py-3.5 rounded-xl bg-[#6B3E4B] text-white font-medium hover:bg-[#542d39] transition shadow-md mt-2">
-                                Book Appointment
+                                Book Perawatan
                             </button>
                         </form>
                     @else
@@ -375,13 +375,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
                             </div>
-                            <h4 class="font-serif text-xl font-semibold text-[#6B3E4B]">Login Diperlukan</h4>
+                            <h4 class="font-serif text-xl font-semibold text-[#6B3E4B]">Silakan Masuk Terlebih Dahulu</h4>
                             <p class="text-xs text-[#765e63] mt-2 max-w-xs mx-auto">
                                 Silakan masuk ke akun Anda terlebih dahulu untuk melakukan reservasi perawatan kecantikan.
                             </p>
                             <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
                                 <a href="{{ route('login') }}" class="inline-flex items-center justify-center bg-[#6B3E4B] text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-[#542d39] transition shadow-md">
-                                    Login Sekarang
+                                    Masuk ke Akun
                                 </a>
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#6B3E4B] text-[#6B3E4B] px-6 py-3 rounded-xl text-sm font-medium hover:bg-[#6B3E4B] hover:text-white transition">
@@ -397,32 +397,32 @@
     </section>
 
     <!-- CONTACT SECTION -->
-    <section id="contact" class="py-16 bg-[#F7EFE9]">
+    <section id="contact" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-5 grid md:grid-cols-3 gap-10">
             <div>
-                <h3 class="font-serif text-2xl font-semibold">Contact Us</h3>
+                <h3 class="font-serif text-2xl font-semibold">Hubungi Kami</h3>
                 <div class="mt-5 space-y-3 text-sm text-gray-600">
                     <p>☎ +62 21 1234567</p>
                     <p>💬 WhatsApp: +62 812 1234 5678</p>
                     <p>📍 Jakarta, Indonesia</p>
-                    <p>📷 Instagram: @velourabeauty</p>
+                    <p>📷 Instagram: Indah Salon</p>
                 </div>
             </div>
 
             <div>
-                <h3 class="font-serif text-2xl font-semibold">Opening Hours</h3>
+                <h3 class="font-serif text-2xl font-semibold">Jam Operasional</h3>
                 <div class="mt-5 space-y-3 text-sm text-gray-600">
-                    <p><strong>Monday - Saturday</strong><br> 08:00 AM - 08:00 PM</p>
-                    <p><strong>Sunday</strong><br> 10:00 AM - 06:00 PM</p>
+                    <p><strong>Senin - Sabtu</strong><br> 08.00 - 20.00</p>
+                    <p><strong>Minggu</strong><br> 10.00 - 18.00</p>
                 </div>
             </div>
 
             <div class="bg-[#6B3E4B] rounded-3xl p-7 text-white shadow-md">
-                <p class="text-xs text-[#D8B08C] uppercase tracking-wider">Your beauty moment</p>
-                <h3 class="font-serif text-2xl font-semibold mt-2">Ready to Glow?</h3>
-                <p class="text-sm text-white/70 mt-2">Reserve your slot today and treat yourself.</p>
+                <p class="text-xs text-[#D8B08C] uppercase tracking-wider">Waktunya Merawat Diri</p>
+                <h3 class="font-serif text-2xl font-semibold mt-2">Siap Tampil Menawan?</h3>
+                <p class="text-sm text-white/70 mt-2">Pesan jadwal perawatan Anda hari ini.</p>
                 <a href="#booking" class="inline-block mt-5 bg-white text-[#6B3E4B] px-6 py-3 rounded-full text-sm font-semibold hover:bg-[#F7EFE9] transition">
-                    Book Now
+                    Pesan Sekarang
                 </a>
             </div>
         </div>

@@ -1,6 +1,6 @@
-@section('title', 'Login')
+@section('title', 'Masuk')
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-[#F9F5F1] px-4 py-8">
+    <div class="min-h-screen flex items-center justify-center bg-white px-4 py-8">
 
         <div class="w-full max-w-md bg-white rounded-3xl px-7 py-6 sm:px-9 shadow-lg">
 
@@ -10,8 +10,8 @@
                 <div class="flex justify-center mb-4">
                     <div class="w-16 h-16 rounded-full overflow-hidden shadow-md">
                         <img
-                            src="{{ asset('images/thumbnail.png') }}"
-                            alt="Veloura"
+                            src="{{ asset('images/logo.png') }}"
+                            alt="Indah Salon"
                             class="w-full h-full object-cover"
                         >
                     </div>
@@ -21,7 +21,7 @@
                     class="text-4xl font-light tracking-[0.08em] uppercase text-[#6B3E4B]"
                     style="font-family: 'Bodoni Moda', 'Times New Roman', serif;"
                 >
-                    Veloura
+                    Indah Salon
                 </h1>
 
                 <p class="mt-2 text-sm text-gray-500">
@@ -31,18 +31,18 @@
             </div>
 
 
-            <!-- Login Content -->
+            <!-- Masuk Content -->
             <div>
 
                 <!-- Heading -->
                 <div class="mb-6">
 
                     <h2 class="text-2xl font-serif font-medium text-[#6B3E4B]">
-                        Welcome Back
+                        Selamat Datang Kembali
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-500">
-                        Please login to your account
+                        Silakan masuk ke akun Anda
                     </p>
 
                 </div>
@@ -76,7 +76,7 @@
                             required
                             autofocus
                             autocomplete="username"
-                            placeholder="Enter your email"
+                            placeholder="Masukkan alamat email Anda"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -94,7 +94,7 @@
                     </div>
 
 
-                    <!-- Password -->
+                    <!-- Kata Sandi -->
                     <div class="mt-5">
 
                         <div class="flex items-center justify-between mb-2">
@@ -103,7 +103,7 @@
                                 for="password"
                                 class="block text-sm font-medium text-gray-700"
                             >
-                                Password
+                                Kata Sandi
                             </label>
 
                             @if (Route::has('password.request'))
@@ -112,7 +112,7 @@
                                     class="text-xs text-[#6B3E4B]
                                     hover:text-[#542d39] transition"
                                 >
-                                    Forgot password?
+                                    Lupa kata sandi?
                                 </a>
                             @endif
 
@@ -124,7 +124,7 @@
                             name="password"
                             required
                             autocomplete="current-password"
-                            placeholder="Enter your password"
+                            placeholder="Masukkan kata sandi Anda"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -160,7 +160,7 @@
                             >
 
                             <span class="ms-2 text-sm text-gray-500">
-                                Remember me
+                                Ingat saya
                             </span>
 
                         </label>
@@ -168,7 +168,7 @@
                     </div>
 
 
-                    <!-- Login Button -->
+                    <!-- Masuk Button -->
                     <div class="mt-6">
 
                         <button
@@ -181,7 +181,7 @@
                             transition duration-200
                             shadow-md shadow-[#6B3E4B]/20"
                         >
-                            Login
+                            Masuk
                         </button>
 
                     </div>
@@ -189,19 +189,19 @@
                 </form>
 
 
-                <!-- Register -->
+                <!-- Daftar -->
                 @if (Route::has('register'))
                     <div class="mt-5 text-center">
 
                         <p class="text-sm text-gray-500">
-                            Don't have an account?
+                            Belum memiliki akun?
 
                             <a
                                 href="{{ route('register') }}"
                                 class="font-medium text-[#6B3E4B]
                                 hover:text-[#542d39] transition"
                             >
-                                Register
+                                Daftar
                             </a>
                         </p>
 

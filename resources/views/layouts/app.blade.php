@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Veloura Beauty Studio') }} | @yield('title', 'Feel Beautiful, Feel You')</title>
+    <title>{{ config('app.name', 'Indah Salon') }} | @yield('title', 'Feel Beautiful, Feel You')</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/thumbnail.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,9 +39,10 @@
             opacity: 0.7;
         }
     </style>
+    @stack('styles')
 </head>
 
-<body class="bg-[#F7EFE9] text-[#6B3E4B] font-['Poppins',sans-serif] antialiased selection:bg-[#D8B08C] selection:text-white min-h-screen flex flex-col">
+<body class="bg-white text-[#6B3E4B] font-['Poppins',sans-serif] antialiased selection:bg-[#D8B08C] selection:text-white min-h-screen flex flex-col">
 
     <!-- NAVIGATION BAR -->
     @include('layouts.navigation')
@@ -64,13 +65,13 @@
     <footer class="bg-[#432630] text-white py-8 mt-auto">
         <div class="max-w-7xl mx-auto px-5 text-center">
             <h3 class="font-serif text-2xl tracking-widest uppercase" style="font-family: 'Bodoni Moda', serif;">
-                Veloura
+                Indah Salon
             </h3>
             <p class="text-xs text-white/50 mt-1">Feel Beautiful, Feel You.</p>
 
             <div class="border-t border-white/10 mt-6 pt-6">
                 <p class="text-xs text-white/40">
-                    © {{ date('Y') }} Veloura Beauty Studio. All Rights Reserved.
+                    © {{ date('Y') }} Indah Salon. Hak Cipta Dilindungi.
                 </p>
             </div>
         </div>

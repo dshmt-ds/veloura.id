@@ -25,7 +25,7 @@
                 </h1>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Tambahkan layanan baru ke Veloura.
+                    Tambahkan layanan baru ke Indah Salon.
                 </p>
 
             </div>
@@ -51,6 +51,7 @@
 
                 <form
                     method="POST"
+                    enctype="multipart/form-data"
                     action="{{ route('admin.services.store') }}"
                     class="p-6"
                 >

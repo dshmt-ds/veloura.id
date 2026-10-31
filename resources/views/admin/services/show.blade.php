@@ -2,7 +2,7 @@
 
 <x-app-layout>
 
-    <div class="bg-[#F9F5F1] min-h-screen py-8">
+    <div class="bg-white min-h-screen py-8">
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 

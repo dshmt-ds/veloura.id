@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
                 'email' => 'admin@veloura.com',
             ],
             [
-                'name' => 'Admin Veloura',
+                'name' => 'Admin Indah Salon',
                 'phone' => '081234567890',
                 'role' => 'admin',
                 'password' => Hash::make('Admin@12345'),

@@ -2,10 +2,10 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-    <!-- Pilih Staff -->
+    <!-- Pilih Staf -->
     <div class="md:col-span-2">
         <label for="staff_id" class="block text-sm font-medium text-gray-700 mb-2">
-            Pilih Staff <span class="text-red-500">*</span>
+            Pilih Staf <span class="text-red-500">*</span>
         </label>
         <select
             id="staff_id"
@@ -13,7 +13,7 @@
             class="w-full rounded-xl border-[#EFE3DE] bg-[#FCFAF8] px-4 py-3 text-sm focus:border-[#6B3E4B] focus:ring-[#6B3E4B] outline-none cursor-pointer @error('staff_id') border-red-500 @enderror"
             required
         >
-            <option value="">-- Pilih Staff --</option>
+            <option value="">-- Pilih Staf --</option>
             @foreach ($staffs as $staff)
                 <option
                     value="{{ $staff->id }}"

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#F7EFE9"/>
+  <circle cx="400" cy="260" r="126" fill="#EFE3DE"/>
+  <g fill="none" stroke="#6B3E4B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M400 340c-62-26-92-61-78-98 35 0 65 22 78 57 13-35 43-57 78-57 14 37-16 72-78 98Z"/>
+    <path d="M400 299c-27-34-29-75 0-108 29 33 27 74 0 108Z"/>
+    <path d="M400 340v25M503 180v30m-15-15h30"/>
+  </g>
+  <text x="400" y="450" fill="#6B3E4B" font-family="Georgia,serif" font-size="40" text-anchor="middle">Indah Salon</text>
+  <text x="400" y="490" fill="#967580" font-family="Arial,sans-serif" font-size="18" text-anchor="middle">Perawatan untuk kecantikan Anda</text>
+</svg>

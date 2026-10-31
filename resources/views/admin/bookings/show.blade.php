@@ -1,7 +1,7 @@
-@section('title', 'Detail Booking')
+@section('title', 'Detail Pemesanan')
 
 <x-app-layout>
-    <div class="bg-[#F8FAFC] min-h-screen py-8 text-slate-700 font-sans">
+    <div class="bg-white min-h-screen py-8 text-slate-700 font-sans">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Header & Navigation -->
@@ -11,11 +11,11 @@
                         href="{{ route('admin.bookings.index') }}"
                         class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#6B3E4B] transition"
                     >
-                        &larr; Kembali ke Kelola Booking
+                        &larr; Kembali ke Kelola Pemesanan
                     </a>
 
                     <h1 class="text-2xl font-semibold text-slate-900 mt-2 flex items-center gap-3">
-                        Detail Booking: <span class="font-mono text-[#6B3E4B]">{{ $booking->booking_code }}</span>
+                        Detail Pemesanan: <span class="font-mono text-[#6B3E4B]">{{ $booking->booking_code }}</span>
                     </h1>
                 </div>
 
@@ -25,7 +25,7 @@
                         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 text-sm font-medium transition"
                     >
                         <i class="fa-regular fa-pen-to-square text-xs"></i>
-                        <span>Edit Booking</span>
+                        <span>Edit Pemesanan</span>
                     </a>
 
                     <form
@@ -50,36 +50,36 @@
             <!-- Main Info Card -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <!-- Left Details (Customer, Staff, & Notes) -->
+                <!-- Left Details (Pelanggan, Staf, & Notes) -->
                 <div class="md:col-span-2 space-y-6">
                     
-                    <!-- Customer & Staff Info -->
+                    <!-- Pelanggan & Staf Info -->
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
                         <h2 class="font-semibold text-slate-900 text-base border-b border-slate-100 pb-3">
                             Informasi Pihak Terkait
                         </h2>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Customer -->
+                            <!-- Pelanggan -->
                             <div class="flex items-start gap-3 p-4 rounded-xl bg-[#F8FAFC] border border-slate-100">
                                 <div class="w-10 h-10 shrink-0 rounded-xl bg-[#F7EFE9] border border-[#EFE1D8] flex items-center justify-center text-[#6B3E4B] font-semibold">
                                     {{ strtoupper(substr($booking->customer?->name ?? 'G', 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Customer</p>
-                                    <p class="font-semibold text-slate-800 truncate mt-0.5">{{ $booking->customer?->name ?? 'Guest' }}</p>
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Pelanggan</p>
+                                    <p class="font-semibold text-slate-800 truncate mt-0.5">{{ $booking->customer?->name ?? 'Tamu' }}</p>
                                     <p class="text-xs text-slate-500 truncate">{{ $booking->customer?->email ?? '-' }}</p>
                                     <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-phone text-[10px] mr-1"></i> {{ $booking->customer?->phone ?? '-' }}</p>
                                 </div>
                             </div>
 
-                            <!-- Staff -->
+                            <!-- Staf -->
                             <div class="flex items-start gap-3 p-4 rounded-xl bg-[#F8FAFC] border border-slate-100">
                                 <div class="w-10 h-10 shrink-0 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-semibold">
                                     {{ strtoupper(substr($booking->staff?->name ?? 'S', 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Staff / Terapis</p>
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Staf</p>
                                     <p class="font-semibold text-slate-800 truncate mt-0.5">{{ $booking->staff?->name ?? 'Belum ditentukan' }}</p>
                                     <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-phone text-[10px] mr-1"></i> {{ $booking->staff?->phone ?? '-' }}</p>
                                 </div>
@@ -90,7 +90,7 @@
                             <div class="space-y-3 pt-2">
                                 @if ($booking->customer_notes)
                                     <div class="p-3.5 rounded-xl bg-amber-50/50 border border-amber-100 text-xs text-amber-900">
-                                        <span class="font-semibold block mb-1">Catatan Customer:</span>
+                                        <span class="font-semibold block mb-1">Catatan Pelanggan:</span>
                                         <p class="italic">"{{ $booking->customer_notes }}"</p>
                                     </div>
                                 @endif
@@ -105,7 +105,7 @@
                         @endif
                     </div>
 
-                    <!-- Ordered Services Items -->
+                    <!-- Ordered Layanan Items -->
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                         <h2 class="font-semibold text-slate-900 text-base border-b border-slate-100 pb-3">
                             Rincian Layanan Perawatan
@@ -146,13 +146,13 @@
 
                         <!-- Status Badge -->
                         <div>
-                            <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block mb-1.5">Status Booking</span>
+                            <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block mb-1.5">Status Pemesanan</span>
                             @php
                                 $statusClasses = [                                     'pending_payment' => 'bg-amber-50 text-amber-700 border-amber-200',                                     'confirmed'       => 'bg-blue-50 text-blue-700 border-blue-200',                                     'in_progress'     => 'bg-purple-50 text-purple-700 border-purple-200',                                     'completed'       => 'bg-green-50 text-green-700 border-green-200',                                     'cancelled'       => 'bg-red-50 text-red-700 border-red-200',                                     'expired'         => 'bg-slate-100 text-slate-600 border-slate-200',                                     'no_show'         => 'bg-rose-50 text-rose-700 border-rose-200',                                 ];$currentStatusClass = $statusClasses[$booking->status] ?? 'bg-slate-100 text-slate-600 border-slate-200';
                             @endphp
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold {{ $currentStatusClass }}">
                                 <span class="w-2 h-2 rounded-full bg-current"></span>
-                                {{ ucwords(str_replace('_', ' ', $booking->status)) }}
+                                {{ match ($booking->status) { 'pending_payment' => 'Menunggu Pembayaran', 'confirmed' => 'Terkonfirmasi', 'in_progress' => 'Sedang Berlangsung', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan', 'expired' => 'Kedaluwarsa', 'no_show' => 'Tidak Hadir', default => $booking->status } }}
                             </span>
                         </div>
 

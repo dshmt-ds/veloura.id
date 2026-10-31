@@ -1,7 +1,7 @@
 @section('title', 'Kategori Layanan')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- 1. Header Section -->
@@ -11,7 +11,7 @@
                         Kategori Layanan
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Kelola kategori layanan salon Veloura.
+                        Kelola kategori layanan salon Indah Salon.
                     </p>
                 </div>
 
@@ -71,7 +71,7 @@
 
                     @if(request('search') || request()->has('status'))
                         <a href="{{ route('admin.service-categories.index') }}" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-sm font-medium hover:bg-slate-200 transition">
-                            Reset
+                            Atur Ulang
                         </a>
                     @endif
                 </form>

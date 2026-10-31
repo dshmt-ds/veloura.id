@@ -1,4 +1,4 @@
-@section('title', 'Tambah Jadwal Staff')
+@section('title', 'Tambah Jadwal Staf')
 
 <x-app-layout>
     <div class="bg-white min-h-screen py-8">
@@ -14,11 +14,11 @@
                 </a>
 
                 <h1 class="text-2xl font-semibold text-[#6B3E4B] mt-4">
-                    Tambah Jadwal Staff
+                    Tambah Jadwal Staf
                 </h1>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Atur jadwal kerja baru untuk staff Veloura.
+                    Atur jadwal kerja baru untuk staff Indah Salon.
                 </p>
             </div>
 

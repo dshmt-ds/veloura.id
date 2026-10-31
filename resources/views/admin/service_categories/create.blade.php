@@ -18,7 +18,7 @@
                 </h1>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Buat kategori baru untuk mengelompokkan layanan salon Veloura.
+                    Buat kategori baru untuk mengelompokkan layanan salon Indah Salon.
                 </p>
             </div>
 
@@ -47,7 +47,7 @@
                             id="name"
                             name="name"
                             value="{{ old('name') }}"
-                            placeholder="Contoh: Hair Treatment"
+                            placeholder="Contoh: Hair Perawatan"
                             required
                             class="w-full rounded-xl border {{ $errors->has('name') ? 'border-red-300 bg-red-50/30' : 'border-[#EFE3DE] bg-white' }} px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#6B3E4B] focus:ring-2 focus:ring-[#6B3E4B]/10 focus:outline-none transition"
                         >

@@ -1,7 +1,7 @@
 @section('title', 'Jam Operasional')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- HEADER SECTION --}}
@@ -11,7 +11,7 @@
                         Jam Operasional
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Atur jam buka dan hari operasional tempat usaha Veloura.
+                        Atur jam buka dan hari operasional tempat usaha Indah Salon.
                     </p>
                 </div>
 

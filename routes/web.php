@@ -13,6 +13,8 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StaffScheduleController;
 use Illuminate\Support\Facades\Route;
 
+Route::pattern('booking', '[0-9]+');
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -64,6 +66,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         [PaymentController::class, 'checkout']
     )->name('customer.bookings.payment');
 
+    Route::post('/customer/bookings/{booking}/payment', [PaymentController::class, 'checkout'])
+        ->name('customer.bookings.payment.prepare');
+
     Route::post(
         '/customer/payment/finish',
         [PaymentController::class, 'finish']
@@ -85,6 +90,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('staffs', StaffController::class);
         Route::resource('operating-hours', OperatingHourController::class)->except(['show']);
         Route::resource('staff-schedules', StaffScheduleController::class);
+        Route::post('/admin/bookings', [BookingController::class, 'store'])->name('bookings.store');
         Route::resource('bookings', BookingController::class)->except(['store']);
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     });

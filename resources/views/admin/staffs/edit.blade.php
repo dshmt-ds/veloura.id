@@ -1,4 +1,4 @@
-@section('title', 'Edit Staff')
+@section('title', 'Edit Staf')
 
 <x-app-layout>
     <div class="bg-white min-h-screen py-8">
@@ -10,11 +10,11 @@
                     href="{{ route('admin.staffs.index') }}"
                     class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#6B3E4B]"
                 >
-                    ← Kembali ke Staff
+                    ← Kembali ke Staf
                 </a>
 
                 <h1 class="text-2xl font-semibold text-[#6B3E4B] mt-4">
-                    Edit Staff
+                    Edit Staf
                 </h1>
 
                 <p class="text-sm text-gray-500 mt-1">
@@ -26,7 +26,7 @@
             <div class="bg-white rounded-2xl border border-[#EFE3DE] shadow-sm">
                 <div class="px-6 py-5 border-b border-[#EFE3DE]">
                     <h2 class="font-semibold text-[#6B3E4B]">
-                        Informasi Staff
+                        Informasi Staf
                     </h2>
                     <p class="text-sm text-gray-500 mt-1">
                         Perbarui detail informasi dan layanan yang dikuasai oleh staff.

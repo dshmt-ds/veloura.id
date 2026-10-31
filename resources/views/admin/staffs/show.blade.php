@@ -1,7 +1,7 @@
-@section('title', 'Detail Staff - ' . $staff->name)
+@section('title', 'Detail Staf - ' . $staff->name)
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- HEADER SECTION --}}
@@ -12,11 +12,11 @@
                         class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#6B3F35] transition"
                     >
                         <i class="fa-solid fa-arrow-left text-xs"></i>
-                        <span>Kembali ke Daftar Staff</span>
+                        <span>Kembali ke Daftar Staf</span>
                     </a>
 
                     <h1 class="text-2xl font-semibold text-slate-900 mt-3">
-                        Detail Staff
+                        Detail Staf
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
                         Informasi profil, daftar layanan yang dikuasai, dan riwayat jadwal kerja staff.
@@ -29,7 +29,7 @@
                         class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F7EFE9] border border-[#EFE1D8] hover:bg-[#EFE1D8] font-medium text-sm transition"
                     >
                         <i class="fa-regular fa-pen-to-square text-xs"></i>
-                        <span>Edit Staff</span>
+                        <span>Edit Staf</span>
                     </a>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                         <div class="px-6 py-4 bg-[#F8FAFC] border-b border-slate-200 flex items-center justify-between">
                             <h3 class="font-semibold text-slate-800 flex items-center gap-2 text-sm">
                                 <i class="fa-regular fa-calendar-days text-[#6B3F35]"></i>
-                                <span>Jadwal Kerja Staff</span>
+                                <span>Jadwal Kerja Staf</span>
                             </h3>
                             <span class="text-xs text-slate-500">
                                 Total: {{ $staff->schedules->count() }} Jadwal

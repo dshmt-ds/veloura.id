@@ -2,10 +2,10 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-    <!-- Nama Staff -->
+    <!-- Nama Staf -->
     <div class="md:col-span-2">
         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-            Nama Staff <span class="text-red-500">*</span>
+            Nama Staf <span class="text-red-500">*</span>
         </label>
         <input
             type="text"
@@ -54,10 +54,10 @@
                 class="w-4 h-4 rounded border-[#EFE3DE] text-[#6B3E4B] focus:ring-[#6B3E4B]"
                 @checked(old('is_active', $staff->is_active ?? true))
             >
-            <span class="text-sm font-medium text-gray-700">Staff Aktif</span>
+            <span class="text-sm font-medium text-gray-700">Staf Aktif</span>
         </label>
         <p class="text-xs text-gray-400 mt-0.5 ml-7">
-            Staff aktif dapat menerima penugasan dan jadwal reservasi pelanggan.
+            Staf aktif dapat menerima penugasan dan jadwal reservasi pelanggan.
         </p>
     </div>
 

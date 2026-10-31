@@ -1,8 +1,8 @@
-@section('title', 'Register')
+@section('title', 'Daftar')
 
 <x-guest-layout>
 
-    <div class="min-h-screen flex items-center justify-center bg-[#F9F5F1] px-4 py-8">
+    <div class="min-h-screen flex items-center justify-center bg-white px-4 py-8">
 
         <div class="w-full max-w-md bg-white rounded-3xl px-7 py-6 sm:px-9 shadow-lg">
 
@@ -12,8 +12,8 @@
                 <div class="flex justify-center mb-3">
                     <div class="w-16 h-16 rounded-full overflow-hidden shadow-md">
                         <img
-                            src="{{ asset('images/thumbnail.png') }}"
-                            alt="Veloura"
+                            src="{{ asset('images/logo.png') }}"
+                            alt="Indah Salon"
                             class="w-full h-full object-cover"
                         >
                     </div>
@@ -23,7 +23,7 @@
                     class="text-4xl font-light tracking-[0.08em] uppercase text-[#6B3E4B]"
                     style="font-family: 'Bodoni Moda', 'Times New Roman', serif;"
                 >
-                    Veloura
+                    Indah Salon
                 </h1>
 
                 <p class="mt-1 text-sm text-gray-500">
@@ -33,7 +33,7 @@
             </div>
 
 
-            <!-- Register Content -->
+            <!-- Daftar Content -->
             <div>
 
                 <!-- Heading -->
@@ -42,28 +42,28 @@
                     <h2
                         class="text-2xl font-serif font-medium text-[#6B3E4B]"
                     >
-                        Create Account
+                        Buat Akun
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-500">
-                        Join Veloura and start your beauty journey
+                        Daftar di Indah Salon dan mulai perawatan Anda
                     </p>
 
                 </div>
 
 
-                <!-- Register Form -->
+                <!-- Daftar Form -->
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
 
-                    <!-- Name -->
+                    <!-- Nama -->
                     <div>
 
                         <label
                             for="name"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Name
+                            Nama
                         </label>
 
                         <input
@@ -74,7 +74,7 @@
                             required
                             autofocus
                             autocomplete="name"
-                            placeholder="Enter your name"
+                            placeholder="Masukkan nama lengkap Anda"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -109,7 +109,7 @@
                             value="{{ old('email') }}"
                             required
                             autocomplete="username"
-                            placeholder="Enter your email"
+                            placeholder="Masukkan alamat email Anda"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -127,14 +127,14 @@
                     </div>
 
 
-                    <!-- Password -->
+                    <!-- Kata Sandi -->
                     <div class="mt-4">
 
                         <label
                             for="password"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Password
+                            Kata Sandi
                         </label>
 
                         <input
@@ -143,7 +143,7 @@
                             name="password"
                             required
                             autocomplete="new-password"
-                            placeholder="Create a password"
+                            placeholder="Buat kata sandi"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -161,14 +161,14 @@
                     </div>
 
 
-                    <!-- Confirm Password -->
+                    <!-- Konfirmasi Kata Sandi -->
                     <div class="mt-4">
 
                         <label
                             for="password_confirmation"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Confirm Password
+                            Konfirmasi Kata Sandi
                         </label>
 
                         <input
@@ -177,7 +177,7 @@
                             name="password_confirmation"
                             required
                             autocomplete="new-password"
-                            placeholder="Confirm your password"
+                            placeholder="Konfirmasi kata sandi Anda"
                             class="block w-full rounded-xl border
                             border-gray-200 bg-[#FAF8F6]
                             px-4 py-3 text-sm text-gray-700
@@ -195,7 +195,7 @@
                     </div>
 
 
-                    <!-- Register Button -->
+                    <!-- Daftar Button -->
                     <div class="mt-6">
 
                         <button
@@ -208,7 +208,7 @@
                             transition duration-200
                             shadow-md shadow-[#6B3E4B]/20"
                         >
-                            Register
+                            Daftar
                         </button>
 
                     </div>
@@ -216,19 +216,19 @@
                 </form>
 
 
-                <!-- Login -->
+                <!-- Masuk -->
                 <div class="mt-4 text-center">
 
                     <p class="text-sm text-gray-500">
 
-                        Already have an account?
+                        Sudah memiliki akun?
 
                         <a
                             href="{{ route('login') }}"
                             class="font-medium text-[#6B3E4B]
                             hover:text-[#542d39] transition"
                         >
-                            Login
+                            Masuk
                         </a>
 
                     </p>

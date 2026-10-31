@@ -1,4 +1,4 @@
-@section('title', 'Edit Jadwal Staff')
+@section('title', 'Edit Jadwal Staf')
 
 <x-app-layout>
     <div class="bg-white min-h-screen py-8">
@@ -14,11 +14,11 @@
                 </a>
 
                 <h1 class="text-2xl font-semibold text-[#6B3E4B] mt-4">
-                    Edit Jadwal Staff
+                    Edit Jadwal Staf
                 </h1>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Perbarui jadwal kerja {{ $staffSchedule->staff->name ?? 'Staff' }}.
+                    Perbarui jadwal kerja {{ $staffSchedule->staff->name ?? 'Staf' }}.
                 </p>
             </div>
 

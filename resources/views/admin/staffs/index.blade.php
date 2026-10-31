@@ -1,17 +1,17 @@
-@section('title', 'Kelola Staff')
+@section('title', 'Kelola Staf')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- HEADER SECTION --}}
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5">
                 <div>
                     <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">
-                        Kelola Staff
+                        Kelola Staf
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Lihat dan kelola semua staff Veloura.
+                        Lihat dan kelola semua staff Indah Salon.
                     </p>
                 </div>
 
@@ -32,7 +32,7 @@
                             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E5C099] hover:bg-[#D9AE82] text-[#6B3F35] text-sm font-medium transition"
                         >
                             <i class="fa-regular fa-calendar-days text-xs"></i>
-                            <span>Jadwal Staff</span>
+                            <span>Jadwal Staf</span>
                         </a>
                     @endif
 
@@ -41,10 +41,14 @@
                         class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6B3F35] hover:bg-[#573229] text-white text-sm font-semibold transition shadow-sm"
                     >
                         <i class="fa-solid fa-plus text-xs"></i>
-                        <span>Tambah Staff</span>
+                        <span>Tambah Staf</span>
                     </a>
                 </div>
             </div>
+
+            @if (session('error'))
+                <div role="alert" class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{{ session('error') }}</div>
+            @endif
 
             <div class="border-b border-slate-200"></div>
 
@@ -57,7 +61,7 @@
                         href="{{ route('admin.staffs.index', request()->except('status', 'page')) }}"
                         class="relative py-2 whitespace-nowrap {{ !request('status') ? 'text-[#6B3F35] font-medium' : 'text-slate-500 hover:text-slate-800' }}"
                     >
-                        Semua Staff
+                        Semua Staf
                         @if (!request('status'))
                             <span class="absolute left-0 right-0 -bottom-[17px] h-0.5 bg-[#6B3F35]"></span>
                         @endif
@@ -67,7 +71,7 @@
                         href="{{ route('admin.staffs.index', array_merge(request()->except('page'), ['status' => 'active'])) }}"
                         class="relative py-2 whitespace-nowrap {{ request('status') === 'active' ? 'text-[#6B3F35] font-medium' : 'text-slate-500 hover:text-slate-800' }}"
                     >
-                        Staff Aktif
+                        Staf Aktif
                         @if (request('status') === 'active')
                             <span class="absolute left-0 right-0 -bottom-[17px] h-0.5 bg-[#6B3F35]"></span>
                         @endif
@@ -132,8 +136,8 @@
                             onchange="this.form.submit()"
                             class="w-full sm:w-44 h-10 pl-9 pr-9 rounded-xl border border-slate-200 bg-white text-sm text-slate-600 appearance-none focus:border-[#B98B6B] focus:ring-1 focus:ring-[#B98B6B] outline-none cursor-pointer"
                         >
-                            <option value="latest" @selected(request('sort', 'latest') === 'latest')>Sort: Terbaru</option>
-                            <option value="oldest" @selected(request('sort') === 'oldest')>Sort: Terlama</option>
+                            <option value="latest" @selected(request('sort', 'latest') === 'latest')>Urutkan: Terbaru</option>
+                            <option value="oldest" @selected(request('sort') === 'oldest')>Urutkan: Terlama</option>
                             <option value="name_asc" @selected(request('sort') === 'name_asc')>Nama: A-Z</option>
                             <option value="name_desc" @selected(request('sort') === 'name_desc')>Nama: Z-A</option>
                         </select>
@@ -163,7 +167,7 @@
                                     >
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Staff
+                                    Staf
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                                     No. Telepon
@@ -204,7 +208,7 @@
                                                     {{ $staff->name }}
                                                 </p>
                                                 <p class="text-xs text-slate-400 mt-0.5">
-                                                    Staff Veloura
+                                                    Staf Indah Salon
                                                 </p>
                                             </div>
                                         </div>
@@ -296,7 +300,7 @@
                                                 href="{{ route('admin.staffs.create') }}"
                                                 class="mt-4 px-4 py-2 rounded-xl bg-[#6B3F35] text-white text-sm font-medium hover:bg-[#573229] transition"
                                             >
-                                                <i class="fa-solid fa-plus mr-1"></i> Tambah Staff
+                                                <i class="fa-solid fa-plus mr-1"></i> Tambah Staf
                                             </a>
                                         </div>
                                     </td>

@@ -67,10 +67,6 @@ class BookingController extends Controller
         // Mengambil user dengan role customer berdasarkan kolom 'role'
         $customers = User::where('role', 'customer')->orderBy('name')->get();
 
-        if ($customers->isEmpty()) {
-            $customers = User::orderBy('name')->get(); // Fallback jika belum ada yang diset role-nya
-        }
-
         $staff = Staff::where('is_active', true)->orderBy('name')->get();
         $services = Service::where('status', 'active')->orderBy('name')->get();
 
@@ -107,14 +103,14 @@ class BookingController extends Controller
 
         // 4. Validasi Input
         $validated = $request->validate([
-            'customer_id'    => ['required', 'exists:users,id'],
-            'staff_id'       => ['required', 'exists:staffs,id'],
+            'customer_id'    => ['required', 'integer', \Illuminate\Validation\Rule::exists('users', 'id')->where('role', 'customer')],
+            'staff_id'       => ['required', 'integer', \Illuminate\Validation\Rule::exists('staffs', 'id')->where('is_active', true)],
             'start_at'       => ['required', 'date'],
             'phone'          => ['nullable', 'string', 'max:20'],
             'payment_due_at' => ['nullable', 'date'],
             'customer_notes' => ['nullable', 'string'],
             'services'       => ['required', 'array', 'min:1'],
-            'services.*'     => ['required', 'exists:services,id', 'distinct'],
+            'services.*'     => ['required', 'integer', \Illuminate\Validation\Rule::exists('services', 'id')->where('status', 'active'), 'distinct'],
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -139,7 +135,7 @@ class BookingController extends Controller
                 'end_at'         => $endAt,
                 'total_amount'   => $totalAmount,
                 'status'         => 'pending_payment',
-                'payment_due_at' => $validated['payment_due_at'] ?? null,
+                'payment_due_at' => $validated['payment_due_at'] ?? now()->addHours(24),
                 'customer_notes' => $validated['customer_notes'] ?? null,
             ]);
 
@@ -174,8 +170,9 @@ class BookingController extends Controller
                 abort(403, 'Akses ditolak.');
             }
 
-            $booking->load(['staff', 'items.service']);
-            return view('customer.bookings.show', compact('booking'));
+            $booking->load(['customer', 'staff', 'items.service', 'latestPayment']);
+            $hasPaidPayment = $booking->payments()->where('status', 'paid')->exists();
+            return view('customer.bookings.show', compact('booking', 'hasPaidPayment'));
         }
 
         // Tampilan Admin
@@ -193,12 +190,9 @@ class BookingController extends Controller
         $booking->load('items');
 
         $customers = User::where('role', 'customer')->orderBy('name')->get();
-        if ($customers->isEmpty()) {
-            $customers = User::orderBy('name')->get();
-        }
-
-        $staff = Staff::where('is_active', true)->orderBy('name')->get();
-        $services = Service::where('status', 'active')->orderBy('name')->get();
+        $staff = Staff::where('is_active', true)->orWhere('id', $booking->staff_id)->orderBy('name')->get();
+        $services = Service::where('status', 'active')
+            ->orWhereIn('id', $booking->items->pluck('service_id'))->orderBy('name')->get();
 
         return view('admin.bookings.edit', compact('booking', 'customers', 'staff', 'services'));
     }
@@ -231,7 +225,7 @@ class BookingController extends Controller
             'customer_notes'      => ['nullable', 'string'],
             'cancellation_reason' => ['nullable', 'string'],
             'services'            => ['required', 'array', 'min:1'],
-            'services.*'          => ['required', 'exists:services,id', 'distinct'],
+            'services.*'          => ['required', 'integer', 'exists:services,id', 'distinct'],
         ]);
 
         DB::transaction(function () use ($validated, $booking) {
@@ -250,11 +244,11 @@ class BookingController extends Controller
                 'end_at'              => $endAt,
                 'total_amount'        => $totalAmount,
                 'status'              => $validated['status'],
-                'payment_due_at'      => $validated['payment_due_at'] ?? null,
+                'payment_due_at'      => $validated['payment_due_at'] ?? $booking->payment_deadline,
                 'customer_notes'      => $validated['customer_notes'] ?? null,
                 'cancellation_reason' => $validated['cancellation_reason'] ?? null,
-                'cancelled_at'        => $validated['status'] === 'cancelled' ? now() : null,
-                'completed_at'        => $validated['status'] === 'completed' ? now() : null,
+                'cancelled_at'        => $validated['status'] === 'cancelled' ? ($booking->cancelled_at ?? now()) : null,
+                'completed_at'        => $validated['status'] === 'completed' ? ($booking->completed_at ?? now()) : null,
             ]);
 
             // Re-sync booking items
@@ -286,6 +280,23 @@ class BookingController extends Controller
         // Keamanan: Validasi bahwa customer hanya bisa menghapus booking miliknya
         if (($user->hasRole('customer') || $user->isCustomer()) && $booking->customer_id !== $user->id) {
             abort(403, 'Akses ditolak.');
+        }
+
+        if ($user->isCustomer()) {
+            $cancelled = DB::transaction(function () use ($booking) {
+                $booking = Booking::whereKey($booking->id)->lockForUpdate()->firstOrFail();
+                if ($booking->status !== 'pending_payment' || $booking->payments()->where('status', 'paid')->exists()) {
+                    return false;
+                }
+
+                $booking->update(['status' => 'cancelled', 'cancelled_at' => now()]);
+                $booking->payments()->where('status', 'pending')->update(['status' => 'cancelled']);
+
+                return true;
+            });
+
+            return redirect()->route('customer.bookings.show', $booking)
+                ->with($cancelled ? 'success' : 'error', $cancelled ? 'Booking berhasil dibatalkan.' : 'Booking ini tidak dapat dibatalkan. Hubungi salon untuk bantuan.');
         }
 
         $booking->delete();

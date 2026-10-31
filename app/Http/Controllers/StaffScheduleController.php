@@ -19,20 +19,16 @@ class StaffScheduleController extends Controller
                     $staffQuery->where('name', 'like', '%' . $search . '%')
                             ->orWhere('phone', 'like', '%' . $search . '%');
                 })
-                ->orWhere('note', 'like', '%' . $search . '%'); 
+                ->orWhere('staff_schedules.notes', 'like', '%' . $search . '%');
             });
         }
 
         if ($request->filled('staff_id')) {
-            $query->where('staff_id', $request->staff_id);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('staff_schedules.staff_id', $request->staff_id);
         }
 
         if ($request->filled('schedule_date')) {
-            $query->whereDate('schedule_date', $request->schedule_date);
+            $query->whereDate('staff_schedules.schedule_date', $request->schedule_date);
         }
 
         switch ($request->sort) {
@@ -47,7 +43,7 @@ class StaffScheduleController extends Controller
                 break;
 
             case 'oldest':
-                $query->orderBy('created_at', 'asc');
+                $query->orderBy('staff_schedules.created_at', 'asc');
                 break;
 
             case 'date_desc':
@@ -57,6 +53,7 @@ class StaffScheduleController extends Controller
         }
 
         $schedules = $query
+            ->orderBy('staff_schedules.id')
             ->paginate(10)
             ->withQueryString();
 
@@ -114,23 +111,21 @@ class StaffScheduleController extends Controller
         StaffSchedule::create($validated);
 
         return redirect()
-            ->route('staff-schedules.index')
+            ->route('admin.staff-schedules.index')
             ->with('success', 'Jadwal staff berhasil ditambahkan.');
     }
 
     public function show(StaffSchedule $staffSchedule)
     {
-        $staffSchedule->load('staff');
-
-        return view(
-            'admin.staff-schedules.show',
-            compact('staffSchedule')
-        );
+        return redirect()->route('admin.staff-schedules.edit', $staffSchedule);
     }
 
     public function edit(StaffSchedule $staffSchedule)
     {
-        $staffs = Staff::where('is_active', true)
+        $staffs = Staff::where(function ($query) use ($staffSchedule) {
+                $query->where('is_active', true)
+                    ->orWhere('id', $staffSchedule->staff_id);
+            })
             ->orderBy('name')
             ->get();
 
@@ -176,7 +171,7 @@ class StaffScheduleController extends Controller
         $staffSchedule->update($validated);
 
         return redirect()
-            ->route('staff-schedules.index')
+            ->route('admin.staff-schedules.index')
             ->with('success', 'Jadwal staff berhasil diperbarui.');
     }
 
@@ -185,7 +180,7 @@ class StaffScheduleController extends Controller
         $staffSchedule->delete();
 
         return redirect()
-            ->route('staff-schedules.index')
+            ->route('admin.staff-schedules.index')
             ->with('success', 'Jadwal staff berhasil dihapus.');
     }
 }

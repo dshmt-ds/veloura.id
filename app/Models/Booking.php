@@ -38,6 +38,11 @@ class Booking extends Model
     ];
 
 
+    public function getPaymentDeadlineAttribute(): ?\Illuminate\Support\Carbon
+    {
+        return $this->payment_due_at ?? $this->created_at?->copy()->addHours(24);
+    }
+
     public function customer()
     {
         return $this->belongsTo(

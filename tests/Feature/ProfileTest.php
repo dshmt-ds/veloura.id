@@ -61,6 +61,32 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    public function test_phone_number_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => '081234567890',
+        ])->assertSessionHasNoErrors()->assertRedirect('/profile');
+
+        $this->assertSame('081234567890', $user->fresh()->phone);
+    }
+
+    public function test_phone_number_cannot_exceed_twenty_characters(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => str_repeat('1', 21),
+        ])->assertSessionHasErrors('phone');
+
+        $this->assertNull($user->fresh()->phone);
+    }
+
     public function test_user_can_delete_their_account(): void
     {
         $user = User::factory()->create();

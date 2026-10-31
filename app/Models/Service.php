@@ -24,8 +24,15 @@ class Service extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'duration' => 'integer',
-        'status' => 'boolean',
+        'status' => 'string',
     ];
+
+    public function getImageUrlAttribute(): string
+    {
+        return $this->image
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($this->image)
+            : asset('images/service-default.svg');
+    }
     
     public function category(): BelongsTo
     {

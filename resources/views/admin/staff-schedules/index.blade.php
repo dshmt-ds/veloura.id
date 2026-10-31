@@ -1,17 +1,17 @@
-@section('title', 'Jadwal Staff')
+@section('title', 'Jadwal Staf')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- HEADER SECTION --}}
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5">
                 <div>
                     <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">
-                        Jadwal Staff
+                        Jadwal Staf
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Kelola jam kerja dan shift staff Veloura.
+                        Kelola jam kerja dan shift staff Indah Salon.
                     </p>
                 </div>
 
@@ -22,7 +22,7 @@
                             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E5C099] hover:bg-[#D9AE82] text-[#6B3F35] text-sm font-medium transition"
                         >
                             <i class="fa-solid fa-list text-xs text-[#6B3F35]"></i>
-                            <span>Daftar Staff</span>
+                            <span>Daftar Staf</span>
                         </a>
                     @endif
 
@@ -86,7 +86,7 @@
                         >
                     </div>
 
-                    {{-- Filter Staff --}}
+                    {{-- Semua Staf --}}
                     <div class="relative">
                         <i class="fa-solid fa-filter absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
                         <select
@@ -94,7 +94,7 @@
                             onchange="this.form.submit()"
                             class="w-full sm:w-48 h-10 pl-9 pr-9 rounded-xl border border-slate-200 bg-white text-sm text-slate-600 appearance-none focus:border-[#B98B6B] focus:ring-1 focus:ring-[#B98B6B] outline-none cursor-pointer"
                         >
-                            <option value="">Filter Staff</option>
+                            <option value="">Semua Staf</option>
                             @foreach ($staffs as $staff)
                                 <option
                                     value="{{ $staff->id }}"
@@ -115,9 +115,9 @@
                             onchange="this.form.submit()"
                             class="w-full sm:w-44 h-10 pl-9 pr-9 rounded-xl border border-slate-200 bg-white text-sm text-slate-600 appearance-none focus:border-[#B98B6B] focus:ring-1 focus:ring-[#B98B6B] outline-none cursor-pointer"
                         >
-                            <option value="date_desc" @selected(request('sort', 'date_desc') === 'date_desc')>Sort: Terbaru</option>
-                            <option value="date_asc" @selected(request('sort') === 'date_asc')>Sort: Terlama</option>
-                            <option value="staff_name_asc" @selected(request('sort') === 'staff_name_asc')>Staff: A-Z</option>
+                            <option value="date_desc" @selected(request('sort', 'date_desc') === 'date_desc')>Urutkan: Terbaru</option>
+                            <option value="date_asc" @selected(request('sort') === 'date_asc')>Urutkan: Terlama</option>
+                            <option value="staff_name_asc" @selected(request('sort') === 'staff_name_asc')>Staf: A-Z</option>
                             <option value="oldest" @selected(request('sort') === 'oldest')>Pertama Dibuat</option>
                         </select>
                         <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
@@ -139,7 +139,7 @@
                         <thead>
                             <tr class="bg-[#F8FAFC] border-b border-slate-200">
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Staff
+                                    Staf
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                                     Tanggal
@@ -159,7 +159,7 @@
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($schedules as $schedule)
                                 <tr class="hover:bg-slate-50/70 transition">
-                                    {{-- Staff Info --}}
+                                    {{-- Staf Info --}}
                                     <td class="px-4 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 shrink-0 rounded-xl bg-[#F7EFE9] border border-[#EFE1D8] flex items-center justify-center">
@@ -169,7 +169,7 @@
                                             </div>
                                             <div class="min-w-0">
                                                 <p class="font-semibold text-slate-800 truncate">
-                                                    {{ $schedule->staff->name ?? 'Staff Tidak Ditemukan' }}
+                                                    {{ $schedule->staff->name ?? 'Staf Tidak Ditemukan' }}
                                                 </p>
                                                 <p class="text-xs text-slate-400 mt-0.5">
                                                     {{ $schedule->staff->phone ?? '-' }}
@@ -195,7 +195,7 @@
 
                                     {{-- Catatan --}}
                                     <td class="px-4 py-4 text-slate-600">
-                                        {{ $schedule->note ?? ($schedule->notes ?? '-') }}
+                                        {{ $schedule->notes ?? '-' }}
                                     </td>
 
                                     {{-- Aksi --}}
@@ -218,7 +218,9 @@
                                                 @method('DELETE')
                                                 <button
                                                     type="button"
-                                                    onclick="confirmDelete('{{ $schedule->id }}', '{{$schedule->staff->name ?? 'Staff' }}')"
+                                                    data-schedule-id="{{ $schedule->id }}"
+                                                    data-staff-name="{{ $schedule->staff->name ?? 'Staf' }}"
+                                                    onclick="confirmDelete(this.dataset.scheduleId, this.dataset.staffName)"
                                                     title="Hapus"
                                                     class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
                                                 >

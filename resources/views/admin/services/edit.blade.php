@@ -32,6 +32,7 @@
 
                 <form
                     method="POST"
+                    enctype="multipart/form-data"
                     action="{{ route('admin.services.update', $service) }}"
                     class="p-6"
                 >

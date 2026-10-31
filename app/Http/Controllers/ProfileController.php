@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -47,6 +49,12 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        if (Booking::where('customer_id', $user->id)->exists()) {
+            throw ValidationException::withMessages([
+                'account' => 'Akun memiliki riwayat booking dan tidak dapat dihapus. Hubungi admin untuk bantuan.',
+            ])->errorBag('userDeletion');
+        }
 
         Auth::logout();
 

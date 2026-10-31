@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        <title>{{ config('app.name', 'Veloura') }} | @yield('title', 'Page')</title>
+        <title>{{ config('app.name', 'Indah Salon') }} | @yield('title', 'Page')</title>
 
-        <link rel="icon" type="image/png" href="/images/thumbnail.png">
+        <link rel="icon" type="image/png" href="/images/logo.png">
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center sm:pt-0 bg-[#F9F5F1]">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center sm:pt-0 bg-white">
             <div class="w-full sm:max-w-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>

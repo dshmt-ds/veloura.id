@@ -1,143 +1,142 @@
 @section('title', 'Laporan & Transaksi')
 
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h2 class="font-serif text-2xl md:text-3xl font-bold text-[#6B3E4B] leading-tight">
+    <div class="bg-white min-h-screen py-8 text-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <div class="border-b border-slate-200 pb-5">
+                <h1 class="text-2xl font-semibold text-slate-900 tracking-tight">
                     Laporan Transaksi & Keuangan
-                </h2>
-                <p class="text-xs text-[#8b686e] mt-1">
-                    Pantau pendapatan, riwayat pembayaran, dan performa reservasi Veloura Studio
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Pantau pendapatan, riwayat pembayaran, dan performa reservasi Indah Salon
                 </p>
             </div>
-        </div>
-    </x-slot>
-
-    <div class="bg-[#F7EFE9] min-h-[calc(100vh-160px)] py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             {{-- Kartu Ringkasan KPI --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {{-- Total Pendapatan --}}
-                <div class="bg-white p-5 rounded-3xl border border-[#EFE3DE] shadow-sm flex items-center justify-between">
+                <div class="bg-[#F7EFE9] p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Pendapatan</p>
-                        <h3 class="text-xl font-bold text-[#6B3E4B] mt-1">
+                        <p class="text-xs font-medium text-slate-500">Total Pendapatan</p>
+                        <h3 class="text-2xl font-semibold break-words text-[#6B3E4B] mt-1">
                             Rp {{ number_format($totalRevenue, 0, ',', '.') }}
                         </h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-[#6B3E4B]/10 text-[#6B3E4B] flex items-center justify-center text-xl shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-[#6B3E4B]/10 text-[#6B3E4B] flex items-center justify-center text-xl shrink-0">
                         <i class="fa-solid fa-wallet"></i>
                     </div>
                 </div>
 
                 {{-- Total Transaksi --}}
-                <div class="bg-white p-5 rounded-3xl border border-[#EFE3DE] shadow-sm flex items-center justify-between">
+                <div class="bg-[#F7EFE9] p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Transaksi</p>
-                        <h3 class="text-xl font-bold text-gray-800 mt-1">
+                        <p class="text-xs font-medium text-slate-500">Total Transaksi</p>
+                        <h3 class="text-2xl font-semibold break-words text-gray-800 mt-1">
                             {{ number_format($totalTransactions) }}
                         </h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 border border-blue-100">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 border border-blue-100">
                         <i class="fa-solid fa-receipt"></i>
                     </div>
                 </div>
 
                 {{-- Transaksi Sukses --}}
-                <div class="bg-white p-5 rounded-3xl border border-[#EFE3DE] shadow-sm flex items-center justify-between">
+                <div class="bg-[#F7EFE9] p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Pembayaran Lunas</p>
-                        <h3 class="text-xl font-bold text-emerald-600 mt-1">
+                        <p class="text-xs font-medium text-slate-500">Pembayaran Lunas</p>
+                        <h3 class="text-2xl font-semibold break-words text-emerald-600 mt-1">
                             {{ number_format($successfulCount) }}
                         </h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 border border-emerald-100">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 border border-emerald-100">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
 
                 {{-- Menunggu Pembayaran --}}
-                <div class="bg-white p-5 rounded-3xl border border-[#EFE3DE] shadow-sm flex items-center justify-between">
+                <div class="bg-[#F7EFE9] p-5 rounded-2xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Menunggu Pembayaran</p>
-                        <h3 class="text-xl font-bold text-amber-600 mt-1">
+                        <p class="text-xs font-medium text-slate-500">Menunggu Pembayaran</p>
+                        <h3 class="text-2xl font-semibold break-words text-amber-600 mt-1">
                             {{ number_format($pendingCount) }}
                         </h3>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0 border border-amber-100">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0 border border-amber-100">
                         <i class="fa-solid fa-clock"></i>
                     </div>
                 </div>
             </div>
 
             {{-- Filter Periode & Status --}}
-            <div class="bg-white p-6 rounded-3xl border border-[#EFE3DE] shadow-sm">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="mb-4">
+                    <h3 class="text-sm font-semibold text-slate-900">Saring Laporan</h3>
+                    <p class="text-xs text-slate-500 mt-1">Pilih periode transaksi dan status pembayaran.</p>
+                </div>
                 <form method="GET" action="{{ route('admin.reports.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                     <div>
-                        <label class="block text-xs font-bold text-[#6B3E4B] uppercase tracking-wider mb-2">Tanggal Mulai</label>
-                        <input type="date" name="start_date" value="{{ $startDate }}" class="w-full text-xs rounded-xl border-[#EFE3DE] focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
+                        <label class="block text-xs font-medium text-slate-600 mb-2" for="start_date">Tanggal Mulai</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ $startDate }}" class="w-full min-w-0 h-10 text-sm rounded-xl border-slate-200 bg-white focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-[#6B3E4B] uppercase tracking-wider mb-2">Tanggal Selesai</label>
-                        <input type="date" name="end_date" value="{{ $endDate }}" class="w-full text-xs rounded-xl border-[#EFE3DE] focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
+                        <label class="block text-xs font-medium text-slate-600 mb-2" for="end_date">Tanggal Selesai</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ $endDate }}" class="w-full min-w-0 h-10 text-sm rounded-xl border-slate-200 bg-white focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-[#6B3E4B] uppercase tracking-wider mb-2">Status Pembayaran</label>
-                        <select name="status" class="w-full text-xs rounded-xl border-[#EFE3DE] focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
+                        <label class="block text-xs font-medium text-slate-600 mb-2" for="status">Status Pembayaran</label>
+                        <select id="status" name="status" class="w-full min-w-0 h-10 text-sm rounded-xl border-slate-200 bg-white focus:border-[#6B3E4B] focus:ring-[#6B3E4B]">
                             <option value="all" {{ $selectedStatus === 'all' ? 'selected' : '' }}>Semua Status</option>
-                            <option value="paid" {{ $selectedStatus === 'paid' ? 'selected' : '' }}>Paid (Lunas)</option>
-                            <option value="pending" {{ $selectedStatus === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="failed" {{ $selectedStatus === 'failed' ? 'selected' : '' }}>Failed</option>
-                            <option value="expired" {{ $selectedStatus === 'expired' ? 'selected' : '' }}>Expired</option>
-                            <option value="cancelled" {{ $selectedStatus === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="paid" {{ $selectedStatus === 'paid' ? 'selected' : '' }}>Lunas</option>
+                            <option value="pending" {{ $selectedStatus === 'pending' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                            <option value="failed" {{ $selectedStatus === 'failed' ? 'selected' : '' }}>Gagal</option>
+                            <option value="expired" {{ $selectedStatus === 'expired' ? 'selected' : '' }}>Kedaluwarsa</option>
+                            <option value="cancelled" {{ $selectedStatus === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                         </select>
                     </div>
 
                     <div class="flex gap-2">
                         <button type="submit" class="w-full py-2.5 px-4 bg-[#6B3E4B] hover:bg-[#522e39] text-white text-xs font-semibold rounded-xl transition shadow-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-filter"></i> Filter
+                            <i class="fa-solid fa-filter"></i> Terapkan Filter
                         </button>
                         <a href="{{ route('admin.reports.index') }}" class="py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition flex items-center justify-center">
-                            Reset
+                            Atur Ulang
                         </a>
                     </div>
                 </form>
             </div>
 
             {{-- Tabel Riwayat Transaksi --}}
-            <div class="bg-white rounded-3xl shadow-sm border border-[#EFE3DE] overflow-hidden">
-                <div class="p-6 border-b border-[#EFE3DE] flex items-center justify-between bg-white/50">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
                     <h3 class="font-semibold text-base text-[#6B3E4B] flex items-center gap-2">
                         <i class="fa-solid fa-receipt text-[#D8B08C]"></i> Rincian Transaksi
                     </h3>
-                    <span class="text-xs text-gray-400">Total Data: {{ $payments->total() }}</span>
+                    <span class="text-xs text-slate-500 rounded-full bg-slate-100 px-3 py-1.5">{{ number_format($payments->total(), 0, ',', '.') }} transaksi</span>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full min-w-[900px] text-left border-collapse">
                         <thead>
-                            <tr class="bg-[#F7EFE9]/50 text-[#6B3E4B] uppercase text-[11px] tracking-wider font-semibold border-b border-[#EFE3DE]">
+                            <tr class="bg-slate-50 text-slate-500 uppercase text-[11px] tracking-wider font-semibold border-b border-slate-200">
                                 <th class="px-6 py-4">Referensi Transaksi</th>
-                                <th class="px-6 py-4">Customer</th>
-                                <th class="px-6 py-4">Metode & Metode Pembayaran</th>
+                                <th class="px-6 py-4">Pelanggan</th>
+                                <th class="px-6 py-4">Metode Pembayaran</th>
                                 <th class="px-6 py-4">Jumlah Biaya</th>
                                 <th class="px-6 py-4">Status</th>
                                 <th class="px-6 py-4">Waktu Transaksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-[#EFE3DE] text-sm text-gray-700">
+                        <tbody class="divide-y divide-slate-100 text-sm text-gray-700">
                             @forelse ($payments as $payment)
-                                <tr class="hover:bg-[#F7EFE9]/30 transition duration-150">
+                                <tr class="hover:bg-slate-50 transition duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <p class="font-mono font-bold text-[#6B3E4B] text-xs">
                                             {{ $payment->payment_reference }}
                                         </p>
                                         <p class="text-[11px] text-gray-400 mt-0.5">
-                                            Booking: #{{ $payment->booking->booking_code ?? '-' }}
+                                            Pemesanan: #{{ $payment->booking->booking_code ?? '-' }}
                                         </p>
                                     </td>
 
@@ -174,7 +173,7 @@
                                         @endphp
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border {{ $badgeClasses }}">
                                             <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                                            {{ ucfirst($payment->status) }}
+                                            {{ match ($payment->status) { 'paid' => 'Lunas', 'pending' => 'Menunggu Pembayaran', 'failed' => 'Gagal', 'expired' => 'Kedaluwarsa', 'cancelled' => 'Dibatalkan', 'refunded' => 'Dana Dikembalikan', default => $payment->status } }}
                                         </span>
                                     </td>
 
@@ -184,8 +183,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-12 text-center text-gray-400 text-sm">
-                                        Tidak ada data transaksi pada rentang periode ini.
+                                    <td colspan="6" class="px-6 py-16 text-center text-slate-500 text-sm">
+                                        <i class="fa-solid fa-receipt block text-3xl text-slate-300 mb-3" aria-hidden="true"></i><p class="font-medium text-slate-700">Belum ada transaksi</p><p class="text-xs text-slate-400 mt-1">Coba ubah periode atau status pembayaran yang dipilih.</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -193,8 +192,9 @@
                     </table>
                 </div>
 
+                <div class="px-5 py-3 text-xs text-slate-500 border-t border-slate-100">Menampilkan {{ $payments->firstItem() ?? 0 }}–{{ $payments->lastItem() ?? 0 }} dari {{ $payments->total() }} transaksi</div>
                 @if($payments->hasPages())
-                    <div class="p-4 border-t border-[#EFE3DE] bg-[#F7EFE9]/20">
+                    <div class="p-4 border-t border-slate-200 bg-slate-50/50">
                         {{ $payments->links() }}
                     </div>
                 @endif

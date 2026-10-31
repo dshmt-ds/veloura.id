@@ -23,7 +23,7 @@ class PaymentController extends Controller
         Config::$is3ds = config('midtrans.is_3ds', true);
     }
 
-    public function checkout(Booking $booking)
+    public function checkout(Request $request, Booking $booking)
     {
         $user = auth()->user();
 
@@ -41,7 +41,12 @@ class PaymentController extends Controller
             'latestPayment'
         ]);
 
-        if (in_array(strtolower($booking->status), ['confirmed', 'approved', 'completed', 'paid', 'cancelled', 'batal'])) {
+        if ($booking->status !== 'pending_payment'
+            || ($booking->payment_deadline && $booking->payment_deadline->isPast())
+            || $booking->payments()->where('status', 'paid')->exists()) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Booking ini tidak dapat dibayar atau batas pembayaran telah lewat.'], 422);
+            }
             return redirect()
                 ->route(
                     $user->hasRole('customer')
@@ -58,6 +63,10 @@ class PaymentController extends Controller
         $payment = $booking->payments()
             ->where('gateway_provider', 'midtrans')
             ->where('status', 'pending')
+            ->where('amount', $booking->total_amount)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
             ->latest()
             ->first();
 
@@ -70,6 +79,10 @@ class PaymentController extends Controller
                 $booking,
                 $payment
             );
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json(['snap_token' => $payment->snap_token]);
         }
 
         return view('payments.checkout', [
@@ -94,7 +107,7 @@ class PaymentController extends Controller
                 'amount' => $booking->total_amount,
                 'currency' => 'IDR',
                 'status' => 'pending',
-                'expires_at' => $booking->payment_due_at ?? now()->addHours(24),
+                'expires_at' => $booking->payment_deadline ?? now()->addHours(24),
             ]);
         });
     }
@@ -130,7 +143,7 @@ class PaymentController extends Controller
         $grossAmount = (int) $itemTotal > 0 ? (int) $itemTotal : (int) $booking->total_amount;
 
         $customer = $booking->customer;
-        $customerName = $customer->name ?? 'Customer Veloura';
+        $customerName = $customer->name ?? 'Customer Indah Salon';
         $nameParts = preg_split('/\s+/', trim($customerName));
         $firstName = $nameParts[0] ?? 'Customer';
         $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
@@ -159,7 +172,7 @@ class PaymentController extends Controller
 
             $payment->update([
                 'snap_token' => $snapToken,
-                'expires_at' => $booking->payment_due_at ?? now()->addHours(24),
+                'expires_at' => $booking->payment_deadline ?? now()->addHours(24),
             ]);
 
             return $payment->fresh();

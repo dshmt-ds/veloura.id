@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -107,14 +108,15 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
-            'category' => ['required', 'string', 'max:100'],
+            'service_category_id' => ['required', 'integer', 'exists:service_categories,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'duration' => ['required', 'integer', 'min:1', 'max:1440'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'status' => ['required', 'in:active,inactive'],
         ], [
             'name.required' => 'Nama layanan wajib diisi.',
-            'category.required' => 'Kategori wajib dipilih.',
+            'service_category_id.required' => 'Kategori wajib dipilih.',
             'price.required' => 'Harga wajib diisi.',
             'price.numeric' => 'Harga harus berupa angka.',
             'duration.required' => 'Durasi wajib diisi.',
@@ -122,7 +124,18 @@ class ServiceController extends Controller
             'duration.min' => 'Durasi minimal 1 menit.',
         ]);
 
-        Service::create($validated);
+        $validated['category'] = ServiceCategory::findOrFail($validated['service_category_id'])->name;
+        unset($validated['image']);
+        $imagePath = $request->hasFile('image') ? $request->file('image')->store('services', 'public') : null;
+
+        try {
+            Service::create([...$validated, 'image' => $imagePath]);
+        } catch (\Throwable $exception) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            throw $exception;
+        }
 
         return redirect()
             ->route('admin.services.index')
@@ -143,6 +156,7 @@ class ServiceController extends Controller
     public function edit(Service $service)
     {
         $categories = ServiceCategory::where('is_active', true)
+            ->orWhere('id', $service->service_category_id)
             ->orderBy('name', 'asc')
             ->get();
 
@@ -156,17 +170,38 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
-            'category' => ['required', 'string', 'max:100'],
+            'service_category_id' => ['required', 'integer', 'exists:service_categories,id'],
             'price' => ['required', 'numeric', 'min:0'],
             'duration' => ['required', 'integer', 'min:1', 'max:1440'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_image' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
         ]);
 
-        $service->update($validated);
+        $validated['category'] = ServiceCategory::findOrFail($validated['service_category_id'])->name;
+        unset($validated['image'], $validated['remove_image']);
+        $oldImage = $service->image;
+        $imagePath = $request->hasFile('image') ? $request->file('image')->store('services', 'public') : null;
+        if ($imagePath || $request->boolean('remove_image')) {
+            $validated['image'] = $imagePath;
+        }
+
+        try {
+            $service->update($validated);
+        } catch (\Throwable $exception) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            throw $exception;
+        }
+
+        if (($imagePath || $request->boolean('remove_image')) && $oldImage && str_starts_with($oldImage, 'services/')) {
+            Storage::disk('public')->delete($oldImage);
+        }
 
         return redirect()
-            ->route('services.index')
+            ->route('admin.services.index')
             ->with('success', 'Layanan berhasil diperbarui.');
     }
 
@@ -177,8 +212,12 @@ class ServiceController extends Controller
     {
         $service->delete();
 
+        if ($service->image && str_starts_with($service->image, 'services/')) {
+            Storage::disk('public')->delete($service->image);
+        }
+
         return redirect()
-            ->route('services.index')
+            ->route('admin.services.index')
             ->with('success', 'Layanan berhasil dihapus.');
     }
 

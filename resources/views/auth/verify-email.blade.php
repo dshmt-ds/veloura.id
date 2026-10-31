@@ -15,7 +15,7 @@
 
             <div>
                 <x-primary-button>
-                    {{ __('Resend Verification Email') }}
+                    {{ __('Kirim Ulang Email Verifikasi') }}
                 </x-primary-button>
             </div>
         </form>
@@ -23,8 +23,8 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
+            <button type="submit" class="px-5 py-2.5 rounded-full bg-[#6B3E4B] text-white text-sm font-medium hover:bg-[#542d39] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6B3E4B] transition">
+                {{ __('Keluar') }}
             </button>
         </form>
     </div>

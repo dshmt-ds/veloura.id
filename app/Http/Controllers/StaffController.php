@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Staff;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StaffController extends Controller
 {
@@ -65,7 +66,7 @@ class StaffController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $services = \App\Models\Service::orderBy('name')->get();
+        $services = Service::orderBy('name')->get();
 
         return view('admin.staffs.index', compact(
             'staffs',
@@ -106,22 +107,24 @@ class StaffController extends Controller
             ],
 
             'services.*' => [
+                'integer',
+                'distinct',
                 'exists:services,id',
             ],
         ]);
 
-        $staff = Staff::create([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'] ?? null,
-            'is_active' => $request->boolean('is_active'),
-        ]);
+        DB::transaction(function () use ($validated, $request) {
+            $staff = Staff::create([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'] ?? null,
+                'is_active' => $request->boolean('is_active'),
+            ]);
 
-        $staff->services()->sync(
-            $validated['services'] ?? []
-        );
+            $staff->services()->sync($validated['services'] ?? []);
+        });
 
         return redirect()
-            ->route('staffs.index')
+            ->route('admin.staffs.index')
             ->with('success', 'Staff berhasil ditambahkan.');
     }
 
@@ -175,31 +178,47 @@ class StaffController extends Controller
             ],
 
             'services.*' => [
+                'integer',
+                'distinct',
                 'exists:services,id',
             ],
         ]);
 
-        $staff->update([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'] ?? null,
-            'is_active' => $request->boolean('is_active'),
-        ]);
+        DB::transaction(function () use ($validated, $request, $staff) {
+            $staff->update([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'] ?? null,
+                'is_active' => $request->boolean('is_active'),
+            ]);
 
-        $staff->services()->sync(
-            $validated['services'] ?? []
-        );
+            $staff->services()->sync($validated['services'] ?? []);
+        });
 
         return redirect()
-            ->route('staffs.index')
+            ->route('admin.staffs.index')
             ->with('success', 'Data staff berhasil diperbarui.');
     }
 
     public function destroy(Staff $staff)
     {
-        $staff->delete();
+        $deleted = DB::transaction(function () use ($staff) {
+            $staff = Staff::whereKey($staff->getKey())->lockForUpdate()->firstOrFail();
+
+            if ($staff->bookings()->exists()) {
+                return false;
+            }
+
+            return $staff->delete();
+        });
+
+        if (! $deleted) {
+            return redirect()
+                ->route('admin.staffs.index')
+                ->with('error', 'Staff memiliki riwayat booking dan tidak dapat dihapus. Nonaktifkan staff melalui halaman edit.');
+        }
 
         return redirect()
-            ->route('staffs.index')
+            ->route('admin.staffs.index')
             ->with('success', 'Staff berhasil dihapus.');
     }
 }

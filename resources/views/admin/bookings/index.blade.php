@@ -1,17 +1,17 @@
-@section('title', 'Kelola Booking')
+@section('title', 'Kelola Pemesanan')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- HEADER SECTION --}}
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5">
                 <div>
                     <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">
-                        Kelola Booking
+                        Kelola Pemesanan
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Lihat dan kelola seluruh jadwal booking pelanggan Veloura.
+                        Kelola jadwal perawatan pelanggan Indah Salon.
                     </p>
                 </div>
 
@@ -32,7 +32,7 @@
                             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E5C099] hover:bg-[#D9AE82] text-[#6B3F35] text-sm font-medium transition"
                         >
                             <i class="fa-solid fa-user-tie text-xs"></i>
-                            <span>Staff</span>
+                            <span>Staf</span>
                         </a>
                     @endif
 
@@ -41,7 +41,7 @@
                         class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6B3F35] hover:bg-[#573229] text-white text-sm font-semibold transition shadow-sm"
                     >
                         <i class="fa-solid fa-plus text-xs"></i>
-                        <span>Tambah Booking</span>
+                        <span>Tambah Pemesanan</span>
                     </a>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         href="{{ route('admin.bookings.index', request()->except('status', 'page')) }}"
                         class="relative py-2 whitespace-nowrap {{ !request('status') ? 'text-[#6B3F35] font-medium' : 'text-slate-500 hover:text-slate-800' }}"
                     >
-                        Semua Booking
+                        Semua Pemesanan
                         @if (!request('status'))
                             <span class="absolute left-0 right-0 -bottom-[17px] h-0.5 bg-[#6B3F35]"></span>
                         @endif
@@ -148,13 +148,13 @@
                                     >
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Kode Booking
+                                    Kode Pemesanan
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Customer
+                                    Pelanggan
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Staff
+                                    Staf
                                 </th>
                                 <th class="px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                                     Jadwal Mulai
@@ -198,7 +198,7 @@
                                             </div>
                                             <div class="min-w-0">
                                                 <p class="font-medium text-slate-800 truncate">
-                                                    {{ $booking->customer?->name ?? 'Guest' }}
+                                                    {{ $booking->customer?->name ?? 'Tamu' }}
                                                 </p>
                                                 <p class="text-xs text-slate-400 truncate">
                                                     {{ $booking->customer?->email ?? '-' }}
@@ -234,7 +234,7 @@
                                         @endphp
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium {{ $currentStatusClass }}">
                                             <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                                            {{ ucwords(str_replace('_', ' ', $booking->status)) }}
+                                            {{ match ($booking->status) { 'pending_payment' => 'Menunggu Pembayaran', 'confirmed' => 'Terkonfirmasi', 'in_progress' => 'Sedang Berlangsung', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan', 'expired' => 'Kedaluwarsa', 'no_show' => 'Tidak Hadir', default => $booking->status } }}
                                         </span>
                                     </td>
 
@@ -282,13 +282,13 @@
                                             <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
                                                 <i class="fa-regular fa-calendar-xmark text-slate-400 text-xl"></i>
                                             </div>
-                                            <p class="font-medium text-slate-700">Belum ada data booking</p>
-                                            <p class="text-sm text-slate-400 mt-1">Data booking pelanggan akan muncul di sini.</p>
+                                            <p class="font-medium text-slate-700">Belum Ada Pemesanan</p>
+                                            <p class="text-sm text-slate-400 mt-1">Pemesanan pelanggan akan ditampilkan di sini.</p>
                                             <a
                                                 href="{{ route('admin.bookings.create') }}"
                                                 class="mt-4 px-4 py-2 rounded-xl bg-[#6B3F35] text-white text-sm font-medium hover:bg-[#573229] transition"
                                             >
-                                                <i class="fa-solid fa-plus mr-1"></i> Tambah Booking
+                                                <i class="fa-solid fa-plus mr-1"></i> Tambah Pemesanan
                                             </a>
                                         </div>
                                     </td>

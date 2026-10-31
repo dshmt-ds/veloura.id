@@ -1,21 +1,21 @@
 @section('title', 'Kelola Layanan')
 
 <x-app-layout>
-    <div class="w-full min-h-screen bg-[#F8FAFC] text-slate-700 font-sans py-8">
+    <div class="w-full min-h-screen bg-white text-slate-700 font-sans py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- 1. Header Section -->
-            <div class="flex flex-row items-center justify-between gap-4 border-b border-slate-200/80 pb-5 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5 w-full">
                 <div class="text-left">
                     <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
                         Kelola Layanan
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Lihat dan kelola semua daftar layanan salon Veloura.
+                        Kelola daftar layanan yang tersedia di Indah Salon.
                     </p>
                 </div>
 
-                <div class="flex items-center gap-2.5 shrink-0">
+                <div class="flex flex-wrap items-center gap-2.5">
                     <a href="{{ route('admin.service-categories.index') }}" class="inline-flex items-center gap-2 bg-[#D8B08C] hover:bg-[#F7EFE9] text-[#6B3E4B] border border-[#D8B08C] hover:text-[#6B3E4B] px-4 py-2 rounded-xl text-sm font-medium shadow-xs transition">
                         <i class="fa-solid fa-layer-group text-xs  text-[#6B3E4B]"></i>
                         <span>Kategori Layanan</span>
@@ -27,27 +27,45 @@
                 </div>
             </div>
 
+            @if (session('success'))
+                <div id="service-success-alert" role="status" class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{{ session('success') }}</div>
+            @endif
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                @foreach ([
+                    ['Total Layanan', number_format($totalServices, 0, ',', '.')],
+                    ['Layanan Aktif', number_format($activeServices, 0, ',', '.')],
+                    ['Layanan Nonaktif', number_format($inactiveServices, 0, ',', '.')],
+                    ['Rata-rata Harga Layanan Aktif', 'Rp ' . number_format($averagePrice, 0, ',', '.')],
+                ] as [$label, $value])
+                    <div class="bg-[#F7EFE9] border border-slate-200 rounded-2xl p-5">
+                        <p class="text-xs text-slate-500">{{ $label }}</p>
+                        <p class="text-2xl font-semibold text-[#6B3E4B] mt-2">{{ $value }}</p>
+                    </div>
+                @endforeach
+            </div>
+
             <!-- 2. Status Navigation Tabs & Filter Bar -->
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-200 pb-2 w-full">
                 
                 <!-- Status Tabs -->
-                <div class="flex items-center gap-4 sm:gap-6 text-sm font-medium shrink-0">
-                    <a href="{{ route('admin.service-categories.index', request()->except('status')) }}" 
+                <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-sm font-medium">
+                    <a href="{{ route('admin.services.index', request()->except(['status', 'page'])) }}" 
                        class="pb-2 border-b-2 {{ !request('status') ? 'border-[#6B3E4B] text-[#6B3E4B] font-semibold' : 'border-transparent text-slate-500 hover:text-slate-800' }} transition">
                         Semua Layanan
                     </a>
-                    <a href="{{ route('admin.service-categories.index', array_merge(request()->query(), ['status' => 'active'])) }}" 
+                    <a href="{{ route('admin.services.index', array_merge(request()->except('page'), ['status' => 'active'])) }}" 
                        class="pb-2 border-b-2 {{ request('status') === 'active' ? 'border-[#6B3E4B] text-[#6B3E4B] font-semibold' : 'border-transparent text-slate-500 hover:text-slate-800' }} transition">
                         Layanan Aktif
                     </a>
-                    <a href="{{ route('admin.service-categories.index', array_merge(request()->query(), ['status' => 'inactive'])) }}" 
+                    <a href="{{ route('admin.services.index', array_merge(request()->except('page'), ['status' => 'inactive'])) }}" 
                        class="pb-2 border-b-2 {{ request('status') === 'inactive' ? 'border-[#6B3E4B] text-[#6B3E4B] font-semibold' : 'border-transparent text-slate-500 hover:text-slate-800' }} transition">
                         Nonaktif
                     </a>
                 </div>
 
                 <!-- Controls Form Toolbar -->
-                <form method="GET" action="{{ route('admin.service-categories.index') }}" class="flex items-center justify-end gap-2 flex-wrap shrink-0 w-full md:w-auto">
+                <form method="GET" action="{{ route('admin.services.index') }}" class="flex items-center gap-2 flex-wrap w-full md:w-auto">
                     @if(request('status'))
                         <input type="hidden" name="status" value="{{ request('status') }}">
                     @endif
@@ -59,6 +77,7 @@
                         </span>
                         <input type="text"
                                name="search"
+                               aria-label="Cari layanan"
                                value="{{ request('search') }}"
                                placeholder="Cari..."
                                class="w-36 sm:w-52 rounded-xl border border-slate-200 bg-white pl-9 pr-3 py-1.5 text-sm text-slate-800 focus:border-[#6B3E4B] focus:outline-none transition shadow-xs">
@@ -69,8 +88,8 @@
                         <span class="absolute left-3 text-slate-500 pointer-events-none">
                             <i class="fa-solid fa-filter text-xs text-slate-500"></i>
                         </span>
-                        <select name="category" onchange="this.form.submit()" class="bg-white border border-slate-200 text-slate-700 text-sm font-medium py-1.5 pl-8 pr-7 rounded-xl shadow-xs focus:outline-none focus:border-[#6B3E4B] cursor-pointer">
-                            <option value="">Filter Kategori</option>
+                        <select name="category" aria-label="Filter kategori" onchange="this.form.submit()" class="bg-white border border-slate-200 text-slate-700 text-sm font-medium py-1.5 pl-8 pr-7 rounded-xl shadow-xs focus:outline-none focus:border-[#6B3E4B] cursor-pointer">
+                            <option value="">Semua Kategori</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category }}" @selected(request('category') === $category)>{{$category }}</option>
                             @endforeach
@@ -82,14 +101,18 @@
                         <span class="absolute left-3 text-slate-500 pointer-events-none">
                             <i class="fa-solid fa-arrow-down-wide-short text-xs text-slate-500"></i>
                         </span>
-                        <select name="sort" onchange="this.form.submit()" class="bg-white border border-slate-200 text-slate-700 text-sm font-medium py-1.5 pl-8 pr-7 rounded-xl shadow-xs focus:outline-none focus:border-[#6B3E4B] cursor-pointer">
-                            <option value="latest" @selected(request('sort', 'latest') === 'latest')>Sort: Terbaru</option>
+                        <select name="sort" aria-label="Urutkan layanan" onchange="this.form.submit()" class="bg-white border border-slate-200 text-slate-700 text-sm font-medium py-1.5 pl-8 pr-7 rounded-xl shadow-xs focus:outline-none focus:border-[#6B3E4B] cursor-pointer">
+                            <option value="latest" @selected(request('sort', 'latest') === 'latest')>Urutkan: Terbaru</option>
                             <option value="name_asc" @selected(request('sort') === 'name_asc')>Nama A-Z</option>
                             <option value="name_desc" @selected(request('sort') === 'name_desc')>Nama Z-A</option>
                             <option value="price_low" @selected(request('sort') === 'price_low')>Harga Terendah</option>
                             <option value="price_high" @selected(request('sort') === 'price_high')>Harga Tertinggi</option>
+                            <option value="duration_low" @selected(request('sort') === 'duration_low')>Durasi Terpendek</option>
+                            <option value="duration_high" @selected(request('sort') === 'duration_high')>Durasi Terpanjang</option>
                         </select>
                     </div>
+                    <button type="submit" class="rounded-xl bg-[#6B3E4B] hover:bg-[#542d39] px-4 py-2 text-xs font-medium text-white">Cari</button>
+                    <a href="{{ route('admin.services.index') }}" class="px-3 py-2 text-xs text-slate-500 hover:text-[#6B3E4B]">Atur Ulang</a>
                 </form>
             </div>
 
@@ -100,7 +123,7 @@
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-semibold uppercase tracking-wider">
                                 <th class="pl-6 pr-3 py-3.5 w-10">
-                                    <input type="checkbox" class="rounded border-slate-300 text-[#6B3E4B] focus:ring-[#6B3E4B]">
+                                    No.
                                 </th>
                                 <th class="px-4 py-3.5">Nama Layanan</th>
                                 <th class="px-4 py-3.5">Kategori</th>
@@ -114,13 +137,13 @@
                             @forelse($services as $service)
                                 <tr class="hover:bg-slate-50/60 transition-colors">
                                     <td class="pl-6 pr-3 py-4">
-                                        <input type="checkbox" class="rounded border-slate-300 text-[#6B3E4B] focus:ring-[#6B3E4B]">
+                                        {{ $services->firstItem() + $loop->index }}
                                     </td>
                                     
                                     <td class="px-4 py-4">
                                         <div class="flex items-center gap-3 text-left">
                                             <div class="w-8 h-8 rounded-lg bg-[#F7EFE9] border border-[#EFE3DE] flex items-center justify-center font-bold text-[#6B3E4B] text-xs shrink-0">
-                                                {{ strtoupper(substr($service->name, 0, 1)) }}
+                                                {{ mb_strtoupper(mb_substr($service->name, 0, 1)) }}
                                             </div>
                                             <div>
                                                 <p class="font-medium text-slate-900">{{ $service->name }}</p>
@@ -147,12 +170,12 @@
                                         @if($service->status === 'active')
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200/60">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                Active
+                                                Aktif
                                             </span>
                                         @else
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium border border-slate-200">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                                Draft
+                                                Nonaktif
                                             </span>
                                         @endif
                                     </td>
@@ -167,7 +190,7 @@
                                             <form id="delete-form-{{ $service->id }}" method="POST" action="{{ route('admin.services.destroy', $service) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" onclick="confirmDelete({{ $service->id }}, '{{$service->name }}')" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                                                <button type="button" data-service-id="{{ $service->id }}" data-service-name="{{ $service->name }}" onclick="confirmDelete(this.dataset.serviceId, this.dataset.serviceName)" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
                                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
@@ -185,7 +208,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                                 </svg>
                                             </div>
-                                            <p class="text-sm font-semibold text-slate-800">Tidak ada layanan ditemukan</p>
+                                            <p class="text-sm font-semibold text-slate-800">Layanan Tidak Ditemukan</p>
                                             <p class="text-xs text-slate-400 mt-1">Coba sesuaikan kata kunci atau filter pencarian Anda.</p>
                                         </div>
                                     </td>
@@ -211,13 +234,24 @@
         </div>
     </div>
 
+    <div id="service-notification" data-success="{{ session('success') }}" hidden></div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        @if (session('success'))
+        const successMessage = document.getElementById('service-notification').dataset.success;
+        const successAlert = document.getElementById('service-success-alert');
+
+        if (successAlert) {
+            window.setTimeout(() => successAlert.remove(), 3000);
+        }
+
+        if (successMessage && typeof Swal !== 'undefined') {
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: "{{ session('success') }}",
+                text: successMessage,
+                timer: 3000,
+                timerProgressBar: true,
                 confirmButtonColor: '#6B3E4B',
                 confirmButtonText: 'Selesai',
                 customClass: {
@@ -225,9 +259,16 @@
                     confirmButton: 'rounded-xl text-sm font-medium px-5 py-2.5'
                 }
             });
-        @endif
+        }
 
         function confirmDelete(serviceId, serviceName) {
+            if (typeof Swal === 'undefined') {
+                if (window.confirm(`Hapus layanan "${serviceName}" secara permanen?`)) {
+                    document.getElementById(`delete-form-${serviceId}`).submit();
+                }
+                return;
+            }
+
             Swal.fire({
                 title: 'Hapus Layanan?',
                 text: `Layanan "${serviceName}" akan dihapus secara permanen.`,
